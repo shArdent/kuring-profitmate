@@ -1,0 +1,55 @@
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+// Auth Pages
+import Login from './pages/Login';
+import Register from './pages/Register';
+import ForgotPassword from './pages/ForgotPassword';
+import ResetPassword from './pages/ResetPassword';
+import ResetPasswordSuccess from './pages/ResetPasswordSuccess';
+// Main Application Pages
+import Dashboard from './pages/Dashboard';
+import HPPN from './pages/HPPN';
+import LabaRugi from './pages/LabaRugi';
+import Transactions from './pages/Transactions';
+// import TransactionDetail from './pages/TransactionDetail';
+import Settings from './pages/Settings';
+
+function App() {
+  // Simple authentication check (you would use a more robust solution with context)
+  const isAuthenticated = () => {
+    return localStorage.getItem('auth_token') !== null;
+  };
+
+  // Protected route component
+  const ProtectedRoute = ({ children }) => {
+    if (!isAuthenticated()) {
+      return <Navigate to="/login" replace />;
+    }
+    return children;
+  };
+
+  return (
+    <Router>
+      <Routes>
+        {/* Auth Routes */}
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
+        <Route path="/reset-password-success" element={<ResetPasswordSuccess />} />
+        
+        {/* Dashboard Route - tanpa ProtectedRoute */}
+        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/settings" element={<Settings />} />
+        <Route path="/labarugi" element={<LabaRugi />} />
+        <Route path="/hppn" element={<HPPN />} />
+        <Route path="/transactions" element={<Transactions />} />
+        
+        {/* Default Route */}
+        <Route path="/" element={<Navigate to="/dashboard" replace />} />
+      </Routes>
+    </Router>
+  );
+}
+
+export default App;
