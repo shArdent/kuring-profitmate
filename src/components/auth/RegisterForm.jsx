@@ -28,7 +28,7 @@ const RegisterForm = () => {
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div>
-        <label htmlFor="fullName" className="block text-sm font-medium text-gray-700 mb-1">
+        <label htmlFor="fullName" className="block text-sm font-bold text-gray-700 mb-6 mt-12">
           Nama Lengkap
         </label>
         <input
@@ -44,7 +44,7 @@ const RegisterForm = () => {
       </div>
       
       <div>
-        <label htmlFor="username" className="block text-sm font-medium text-gray-700 mb-1">
+        <label htmlFor="username" className="block text-sm font-bold text-gray-700 mb-6">
           Nama Usaha
         </label>
         <input
@@ -60,7 +60,7 @@ const RegisterForm = () => {
       </div>
       
       <div>
-        <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
+        <label htmlFor="email" className="block text-sm font-bold text-gray-700 mb-6">
           Alamat Email
         </label>
         <input
@@ -76,7 +76,7 @@ const RegisterForm = () => {
       </div>
       
       <div>
-        <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
+        <label htmlFor="password" className="block text-sm font-bold text-gray-700 mb-6">
           Password
         </label>
         <input
@@ -92,7 +92,7 @@ const RegisterForm = () => {
       </div>
       
       <div>
-        <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700 mb-1">
+        <label htmlFor="confirmPassword" className="block text-sm font-bold text-gray-700 mb-6">
           Konfirmasi Password
         </label>
         <input
@@ -107,17 +107,19 @@ const RegisterForm = () => {
         />
       </div>
       
-      <button
-        type="submit"
-        className="w-full py-2 px-4 mt-4 bg-orange-btn text-white font-medium rounded-md hover:bg-orange-btn-hover transition-colors"
-      >
-        Daftar
-      </button>
+      <div className="flex justify-center">
+        <button
+          type="submit"
+          className="w-64 py-2 px-4 mt-4 bg-orange-400 text-white font-medium rounded-full hover:bg-orange-500 transition-colors"
+        >
+          Daftar
+        </button>
+      </div>
       
       <div className="text-center mt-4">
-        <p className="text-sm text-gray-600">
+        <p className="text-sm text-gray-600 font-bold">
           Sudah punya akun?{' '}
-          <Link to="/login" className="text-orange hover:underline font-medium">
+          <Link to="/login" className="text-orange hover:underline font-bold">
             Masuk
           </Link>
         </p>

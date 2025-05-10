@@ -49,10 +49,10 @@ const ResetPassword = () => {
       <Header />
       
       <div className="flex-grow flex items-center justify-center px-4">
-        <div className="bg-white p-8 rounded-md shadow-sm w-full max-w-md">
+      <div className="bg-white px-10 py-8 rounded-md shadow-md w-full max-w-2xl min-h-[480px]">
           <h2 className="text-xl font-semibold text-center mb-6">Buat Password Baru</h2>
           
-          <p className="text-center text-sm mb-6">
+          <p className="text-center text-sm font-semibold mb-6 mt-8">
             Kata sandi baru Anda harus berbeda dari kata sandi Anda sebelumnya!
           </p>
           
@@ -63,8 +63,8 @@ const ResetPassword = () => {
           )}
           
           <form onSubmit={handleSubmit}>
-            <div className="mb-4">
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
+            <div className="mb-4 mt-8 px-8 ">
+              <label htmlFor="password" className="block text-sm font-semibold text-gray-700 mb-1">
                 Password Baru
               </label>
               <input
@@ -75,12 +75,12 @@ const ResetPassword = () => {
                 value={formData.password}
                 onChange={handleChange}
                 required
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none"
+                className="w-full px-3 py-2 mt-4 border border-gray-300 rounded-md focus:outline-none"
               />
             </div>
             
-            <div className="mb-6">
-              <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700 mb-1">
+            <div className="mb-6 mt-8 px-8">
+              <label htmlFor="confirmPassword" className="block text-sm font-semibold text-gray-700 mb-1">
                 Konfirmasi Password
               </label>
               <input
@@ -91,13 +91,13 @@ const ResetPassword = () => {
                 value={formData.confirmPassword}
                 onChange={handleChange}
                 required
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none"
+                className="w-full px-3 py-2 mt-4 border border-gray-300 rounded-md focus:outline-none"
               />
             </div>
             
             <button
               type="submit"
-              className="w-full py-2 px-4 bg-orange-400 text-white font-medium rounded-md hover:bg-orange-500 transition-colors"
+              className="w-lg py-2 px-4 mt-10 bg-orange-400 text-white font-medium rounded-full hover:bg-orange-500 transition-colors mx-auto block "
             >
               Reset Password
             </button>
