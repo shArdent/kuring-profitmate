@@ -30,12 +30,9 @@ const LoginForm = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
+    <form onSubmit={handleSubmit} className="space-y-8">
       <div>
-        <label
-          htmlFor="email"
-          className="block text-sm font-medium text-gray-700 mb-1"
-        >
+        <label htmlFor="email" className="block text-sm font-bold text-gray-700 mb-6 mt-12">
           Alamat Email
         </label>
         <input
@@ -51,10 +48,7 @@ const LoginForm = () => {
       </div>
 
       <div>
-        <label
-          htmlFor="password"
-          className="block text-sm font-medium text-gray-700 mb-1"
-        >
+        <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
           Password
         </label>
         <input
@@ -69,7 +63,7 @@ const LoginForm = () => {
         />
       </div>
 
-      <div className="flex justify-between">
+      <div className="flex justify-between items-center">
         <div className="flex items-center">
           <input
             type="checkbox"
@@ -86,29 +80,26 @@ const LoginForm = () => {
             Ingat saya
           </label>
         </div>
-
-        <Link
-          to="/forgot-password"
-          className="text-sm text-orange-500 hover:underline"
-        >
+        
+        <Link to="/forgot-password" className="text-sm text-orange-500 hover:underline">
           Lupa Password?
         </Link>
       </div>
 
-      <button
-        type="submit"
-        className="w-full py-2 px-4 mt-4 bg-orange-400 text-white font-medium rounded-md hover:bg-orange-500 transition-colors"
-      >
-        Masuk
-      </button>
+      {/* Tombol submit ditaruh di tengah */}
+      <div className="flex justify-center">
+        <button
+          type="submit"
+          className="w-64 py-2 px-4 mt-4 bg-orange-400 text-white font-medium rounded-full hover:bg-orange-500 transition-colors"
+        >
+          Masuk
+        </button>
+      </div>
 
       <div className="text-center mt-4">
-        <p className="text-sm text-gray-600">
-          Belum punya akun?{" "}
-          <Link
-            to="/register"
-            className="text-orange-500 hover:underline font-medium"
-          >
+        <p className="text-sm text-gray-600 font-bold">
+          Belum punya akun?{' '}
+          <Link to="/register" className="text-orange-500 hover:underline font-medium">
             Daftar
           </Link>
         </p>
@@ -118,4 +109,3 @@ const LoginForm = () => {
 };
 
 export default LoginForm;
-

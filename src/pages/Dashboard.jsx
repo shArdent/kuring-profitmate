@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
-import { Line } from 'recharts';
-import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, LineChart } from 'recharts';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { PieChart, Pie, Cell, Tooltip as PieTooltip } from 'recharts';
+import { BarChart, Bar, Legend } from 'recharts';
 import DashboardLayout from '../layouts/DashboardLayout';
 import DashboardCards from '../components/features/dashboard/DashboardCards';
+
 
 const Dashboard = () => {
   // Data for profit/loss chart
@@ -53,13 +55,14 @@ const Dashboard = () => {
   return (
     <DashboardLayout title="Dashboard">
       <div className="p-6">
-        <h1 className="text-2xl font-bold mb-6">Laba Rugi Antar Periode</h1>
-        
+        <h1 className="text-2xl font-bold mb-4 px-10">Laba Rugi Antar Periode</h1>
+        <div className="bg-gray-100 p-4"></div>
         {/* Dashboard cards component */}
         <DashboardCards data={summaryData} />
         
         {/* Profit/Loss Chart */}
-        <div className="bg-white p-4 rounded-lg shadow mb-6">
+        <div className="px-10">
+        <div className="bg-white p-4 rounded-lg shadow mb-16 ">
           <ResponsiveContainer width="100%" height={300}>
             <LineChart data={profitData} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
               <CartesianGrid strokeDasharray="3 3" vertical={false} />
@@ -70,42 +73,55 @@ const Dashboard = () => {
             </LineChart>
           </ResponsiveContainer>
         </div>
-        
-        {/* Current Period */}
-        <h2 className="text-xl font-bold mb-4">Periode Saat Ini</h2>
-        <div className="bg-blue-500 text-white p-4 rounded-lg mb-6 relative">
-          <div 
-            className="flex items-center justify-between cursor-pointer"
-            onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-          >
-            <div>
-              <h3 className="text-lg font-semibold">{currentPeriod.name}</h3>
-              <p>{currentPeriod.range}</p>
-            </div>
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-            </svg>
-          </div>
-          
-          {isDropdownOpen && (
-            <div className="absolute top-full left-0 right-0 bg-white text-gray-800 rounded-b-lg shadow-lg z-10">
-              <ul>
-                {periods.map((period, index) => (
-                  <li 
-                    key={index} 
-                    className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
-                    onClick={() => handlePeriodChange(period)}
-                  >
-                    {period.name}: {period.range}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
         </div>
         
+        {/* Current Period */}
+        <div className="mb-6">
+          <h2 className="text-xl font-bold mb-4 px-10 ">Periode Saat Ini</h2>
+
+          {/* Wrapper dengan relative untuk dropdown */}
+          <div className="relative px-10">
+            {/* Box biru sebagai trigger */}
+            <div
+              onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+              className="bg-blue-500 text-white p-4 rounded-lg mt-8 flex items-center justify-between cursor-pointer"
+            >
+              <div>
+                <h3 className="text-lg font-semibold">{currentPeriod.name}</h3>
+                <p>{currentPeriod.range}</p>
+              </div>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-6 w-6"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+              </svg>
+            </div>
+
+            {/* Dropdown, DIPINDAHKAN KE LUAR box biru */}
+            {isDropdownOpen && (
+              <div className="absolute top-full left-0 right-0 bg-white text-gray-800 rounded-b-lg shadow-lg z-10">
+                <ul>
+                  {periods.map((period, index) => (
+                    <li
+                      key={index}
+                      className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                      onClick={() => handlePeriodChange(period)}
+                    >
+                      {period.name}: {period.range}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </div>
+        </div>
+
         {/* Charts Section */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-13 px-10">
           {/* Expense Ratio */}
           <div className="bg-white p-4 rounded-lg shadow">
             <h2 className="text-xl font-bold mb-4">Rasio Pengeluaran</h2>
@@ -127,7 +143,7 @@ const Dashboard = () => {
                         <Cell key={`cell-${index}`} fill={entry.color} />
                       ))}
                     </Pie>
-                    <Tooltip />
+                    <PieTooltip />
                   </PieChart>
                 </ResponsiveContainer>
               </div>

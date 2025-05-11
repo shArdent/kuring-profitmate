@@ -21,11 +21,11 @@ const PricingCalculator = () => {
 
   return (
     <>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8 px-10 mt-8">
         {/* Left Column */}
         <div>
           <div className="mb-6">
-            <label className="block text-gray-700 font-medium mb-2">
+            <label className="block text-gray-700 font-semibold mb-2">
               Jumlah Produk Dihasilkan
             </label>
             <input
@@ -38,7 +38,7 @@ const PricingCalculator = () => {
           </div>
 
           <div className="mb-6">
-            <label className="block text-gray-700 font-medium mb-2">
+            <label className="block text-gray-700 font-semibold mb-2">
               Nominal Persediaan Awal
             </label>
             <div className="relative">
@@ -59,7 +59,7 @@ const PricingCalculator = () => {
         {/* Right Column */}
         <div>
           <div className="mb-6">
-            <label className="block text-gray-700 font-medium mb-2">
+            <label className="block text-gray-700 font-semibold mb-2">
               Margin Keuntungan
             </label>
             <div className="relative">
@@ -82,7 +82,7 @@ const PricingCalculator = () => {
           </div>
 
           <div className="mb-6">
-            <label className="block text-gray-700 font-medium mb-2">
+            <label className="block text-gray-700 font-semibold mb-2">
               Nominal Persediaan Akhir
             </label>
             <div className="relative">
@@ -101,7 +101,7 @@ const PricingCalculator = () => {
         </div>
       </div>
 
-      <div className="mb-8">
+      <div className="mb-8 px-10">
         <button
           onClick={handleCalculate}
           className="bg-orange-400 hover:bg-orange-500 text-white font-medium py-2 px-8 rounded"
@@ -111,8 +111,8 @@ const PricingCalculator = () => {
       </div>
 
       <div>
-        <h2 className="text-xl font-bold mb-4">Harga Pokok Penjualan</h2>
-        <div className="overflow-x-auto">
+        <h2 className="text-xl font-bold mb-4 px-10">Harga Pokok Penjualan</h2>
+        <div className="overflow-x-auto px-10 mt-8">
           <table className="w-full border-collapse">
             <thead>
               <tr className="border border-gray-200 bg-gray-50">

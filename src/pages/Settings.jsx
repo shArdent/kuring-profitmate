@@ -34,19 +34,19 @@ const Settings = () => {
       <Sidebar />
       
       <div className="flex-1 p-8">
-        <h1 className="text-2xl font-bold mb-6">Pengaturan</h1>
+        <h1 className="text-2xl font-bold mb-6 px-10">Pengaturan</h1>
         
-        <form onSubmit={handleSubmit} className="max-w-full">
+        <form onSubmit={handleSubmit} className="max-w-full px-10 mt-8">
+          <label className="block text-sm font-semibold mb-1">Nama Pengguna</label>
           <Input 
-            label="Nama Pengguna"
             name="nama"
             placeholder="Masukan Nama Pengguna"
             value={formData.nama}
             onChange={handleChange}
           />
           
+          <label className="block text-sm font-semibold mb-1">Email</label>
           <Input 
-            label="Email"
             type="email"
             name="email"
             placeholder="Masukan Email"
@@ -54,24 +54,24 @@ const Settings = () => {
             onChange={handleChange}
           />
           
+          <label className="block text-sm font-semibold mb-1">Id Transaksi</label>
           <Input 
-            label="Id Transaksi"
             name="idTransaksi"
             placeholder="Masukan Id Transaksi"
             value={formData.idTransaksi}
             onChange={handleChange}
           />
           
+          <label className="block text-sm font-semibold mb-1">Nama Usaha</label>
           <Input 
-            label="Nama Usaha"
             name="namaUsaha"
             placeholder="Masukan Nama Usaha"
             value={formData.namaUsaha}
             onChange={handleChange}
           />
           
+          <label className="block text-sm font-semibold mb-1">Password Lama</label>
           <Input 
-            label="Password Lama"
             type="password"
             name="passwordLama"
             placeholder="Masukan Password Lama"
@@ -79,8 +79,8 @@ const Settings = () => {
             onChange={handleChange}
           />
           
+          <label className="block text-sm font-semibold mb-1">Password Baru</label>
           <Input 
-            label="Password Baru"
             type="password"
             name="passwordBaru"
             placeholder="Masukan Password Baru"
@@ -88,8 +88,8 @@ const Settings = () => {
             onChange={handleChange}
           />
           
+          <label className="block text-sm font-semibold mb-1">Konfirmasi Password</label>
           <Input 
-            label="Konfirmasi Password"
             type="password"
             name="konfirmasiPassword"
             placeholder="Konfirmasi Password"

@@ -7,7 +7,7 @@ const HPPN = () => {
     <div className="flex min-h-screen">
       <Sidebar />
       <main className="flex-1 p-6 bg-gray-50">
-        <h1 className="text-2xl font-bold mb-8">Harga Pokok Penjualan</h1>
+        <h1 className="text-2xl font-bold mb-8 px-10">Harga Pokok Penjualan</h1>
         <PricingCalculator />
       </main>
     </div>

@@ -24,18 +24,21 @@ const ForgotPassword = () => {
 
       {/* Content */}
       <div className="flex-grow flex items-center justify-center px-4">
-        <div className="bg-white p-8 rounded-md shadow-sm w-full max-w-md">
-          <h2 className="text-xl font-semibold text-center mb-6">Lupa Password</h2>
+      <div className="bg-white px-10 py-8 rounded-md shadow-md w-full max-w-2xl min-h-[450px]">
+
+          <h2 className="text-xl font-extrabold text-center mb-6">Lupa Password</h2>
           
-          <p className="text-center text-sm mb-6">
+          <div className="max-w-lg mx-auto">
+          <p className="text-center  text-base font-semibold mb-6 mt-8">
             Masukkan alamat email yang Anda gunakan untuk membuat akun, dan 
             kami akan mengirimkan instruksi untuk mengatur ulang kata sandi Anda 
             melalui email
           </p>
+          </div>
           
           <form onSubmit={handleSubmit}>
-            <div className="mb-4">
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
+            <div className="mb-4 max-w-lg mx-auto">
+              <label htmlFor="email" className="block text-sm font-semibold text-gray-700 mb-1 mt-8">
                 Alamat Email
               </label>
               <input
@@ -45,21 +48,23 @@ const ForgotPassword = () => {
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="Masukkan email anda"
                 required
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none mt-6"
               />
             </div>
             
+            <div className="flex justify-center">
             <button
               type="submit"
-              className="w-full py-2 px-4 bg-orange-400 text-white font-medium rounded-md hover:bg-orange-500 transition-colors"
+              className="w-full py-4 px-4 bg-orange-400 text-white font-medium rounded-full hover:bg-orange-500 transition-colors mt-8 max-w-lg mx-auto"
             >
               Kirim Email
             </button>
+            </div>
           </form>
           
-          <div className="text-center mt-4">
-            <p className="text-sm text-gray-600">
-              Ingat password? <Link to="/login" className="text-orange-500 hover:underline">Masuk</Link>
+          <div className="text-center mt-8">
+            <p className="text-sm text-gray-600 font-semibold">
+              Ingat password? <Link to="/login" className="text-orange-500 hover:underline ">Masuk</Link>
             </p>
           </div>
         </div>

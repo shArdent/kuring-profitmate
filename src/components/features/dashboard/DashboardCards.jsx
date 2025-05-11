@@ -13,7 +13,7 @@ const DashboardCards = ({ data }) => {
   };
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6 px-10">
       {/* Total Income Card */}
       <div className="bg-white p-4 rounded-lg shadow">
         <h3 className="text-sm font-medium text-gray-500 mb-1">Total Pendapatan</h3>
@@ -51,7 +51,7 @@ const DashboardCards = ({ data }) => {
       </div>
       
       {/* Profit Margin Card */}
-      <div className="bg-white p-4 rounded-lg shadow">
+      <div className="bg-white p-4 rounded-lg shadow ">
         <h3 className="text-sm font-medium text-gray-500 mb-1">Margin Keuntungan</h3>
         <p className="text-xl font-bold text-gray-800">{profitMargin}</p>
         <div className="mt-2 flex items-center text-green-500">

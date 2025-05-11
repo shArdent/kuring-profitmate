@@ -11,7 +11,7 @@ const AuthLayout = ({ children, title }) => {
       {/* Left side - blue background */}
       <div className="hidden md:flex md:w-1/2 bg-[#789DBC] flex-col items-center justify-center text-white p-10">
         <div className="flex flex-col items-center max-w-md">
-          <div className="w-32 h-32 mb-6 rounded-md flex items-center justify-center">
+          <div className="mb-6 rounded-md flex items-center justify-center">
             {/* Fallback jika gambar tidak tersedia */}
             {chartIcon ? (
               <img src={chartIcon} alt="Chart Icon" className="w-full h-full" />
@@ -20,7 +20,7 @@ const AuthLayout = ({ children, title }) => {
             )}
           </div>
           <h1 className="text-2xl font-bold mb-2 text-center">Selamat Datang di ProfitMate</h1>
-          <p className="text-center">
+          <p className="text-center mt-6">
             Aplikasi web pemantauan laba rugi dan membantu laporan hasil keuangan secara otomatis dan efisien
           </p>
         </div>

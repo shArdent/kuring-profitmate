@@ -80,57 +80,67 @@ const LabaRugi = () => {
     <div className="flex min-h-screen">
       <Sidebar /> {/* Sidebar di sebelah kiri */}
       <div className="flex-1 p-6 bg-gray-50">
-        <h1 className="text-2xl font-bold mb-6">Laporan Laba/Rugi</h1>
+        <h1 className="text-2xl font-bold mb-6 px-10">Laporan Laba/Rugi</h1>
         
         {/* Form */}
-        <div className="mb-6">
-          <form onSubmit={handleSubmit} className="flex flex-wrap gap-6 mb-4">
-            <div className="w-72">
-              <DatePicker
-                label="Periode"
-                name="periode"
-                value={periode}
-                onChange={(value) => setPeriode(value)}
-                placeholder="Pilih Periode"
-              />
-            </div>
+        {/* Form */}
+<div className="mt-8 px-10">
+  <form onSubmit={handleSubmit}>
+    {/* Baris input */}
+    <div className="flex flex-wrap gap-6 mb-4">
+      <div className="w-72">
+        <label className="block text-sm font-semibold mb-1">Periode</label>
+        <DatePicker
+          name="periode"
+          value={periode}
+          onChange={(value) => setPeriode(value)}
+          placeholder="Pilih Periode"
+        />
+      </div>
 
-            <div className="w-72">
-              <label htmlFor="jumlahProduk" className="block text-sm font-medium text-gray-700 mb-1">
-                Jumlah Produk Terjual
-              </label>
-              <input
-                type="text"
-                id="jumlahProduk"
-                value={jumlahProdukTerjual}
-                onChange={(e) => setJumlahProdukTerjual(e.target.value)}
-                placeholder="Masukan jumlah produk terjual"
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-orange-500"
-              />
-            </div>
+      <div className="w-140 px-8">
+        <label htmlFor="jumlahProduk" className="block text-sm font-semibold text-gray-700 mb-1">
+          Jumlah Produk Terjual
+        </label>
+        <input
+          type="text"
+          id="jumlahProduk"
+          value={jumlahProdukTerjual}
+          onChange={(e) => setJumlahProdukTerjual(e.target.value)}
+          placeholder="Masukan jumlah produk terjual"
+          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-orange-500"
+        />
+      </div>
+    </div>
 
-            <div className="flex items-end">
-              <Button type="submit" variant="primary">
-                Tampilkan
-              </Button>
-            </div>
-          </form>
-        </div>
+    {/* Tombol pindah ke bawah kiri */}
+    <div className="mt-4">
+      <Button type="submit" variant="primary">
+        Tampilkan
+      </Button>
+    </div>
+  </form>
+</div>
+
 
         {/* Chart Section */}
-        <div className="mb-8">
-          <h2 className="text-xl font-bold mb-4">Grafik Laba/Rugi</h2>
+        <div className="mb-8 mt-8 px-10 ">
+          <h2 className="text-xl font-bold mb-4 ">Grafik Laba/Rugi</h2>
+          <div className="mt-4">
           <ProfitLossChart data={profitLossData} />
+          </div>
         </div>
 
         {/* Table Section */}
-        <div>
-          <h2 className="text-xl font-bold mb-4">Laporan Laba/Rugi</h2>
+        <div className="px-10">
+          <h2 className="text-xl font-bold ">Laporan Laba/Rugi</h2>
+          <div className="mt-4">
           <Table 
             columns={columns} 
             data={tableData} 
             emptyMessage="Tidak ada data laporan laba/rugi" 
           />
+          </div>
         </div>
       </div>
     </div>
