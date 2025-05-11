@@ -1,31 +1,41 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { login } from "../../utils/api";
 
 const LoginForm = () => {
+  const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
-    email: '',
-    password: '',
-    rememberMe: false
+    email: "",
+    password: "",
+    rememberMe: false,
   });
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: type === 'checkbox' ? checked : value
+      [name]: type === "checkbox" ? checked : value,
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     // Implementasi login akan ditambahkan di sini
-    console.log('Login form submitted:', formData);
+    console.log("Login form submitted:", formData);
+
+    await login(formData);
+
+    navigate("/dashboard");
   };
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div>
-        <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
+        <label
+          htmlFor="email"
+          className="block text-sm font-medium text-gray-700 mb-1"
+        >
           Alamat Email
         </label>
         <input
@@ -39,9 +49,12 @@ const LoginForm = () => {
           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-orange"
         />
       </div>
-      
+
       <div>
-        <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
+        <label
+          htmlFor="password"
+          className="block text-sm font-medium text-gray-700 mb-1"
+        >
           Password
         </label>
         <input
@@ -55,7 +68,7 @@ const LoginForm = () => {
           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-orange"
         />
       </div>
-      
+
       <div className="flex justify-between">
         <div className="flex items-center">
           <input
@@ -66,27 +79,36 @@ const LoginForm = () => {
             checked={formData.rememberMe}
             onChange={handleChange}
           />
-          <label htmlFor="rememberMe" className="ml-2 block text-sm text-gray-700">
+          <label
+            htmlFor="rememberMe"
+            className="ml-2 block text-sm text-gray-700"
+          >
             Ingat saya
           </label>
         </div>
-        
-        <Link to="/forgot-password" className="text-sm text-orange-500 hover:underline">
+
+        <Link
+          to="/forgot-password"
+          className="text-sm text-orange-500 hover:underline"
+        >
           Lupa Password?
         </Link>
       </div>
-      
+
       <button
         type="submit"
         className="w-full py-2 px-4 mt-4 bg-orange-400 text-white font-medium rounded-md hover:bg-orange-500 transition-colors"
       >
         Masuk
       </button>
-      
+
       <div className="text-center mt-4">
         <p className="text-sm text-gray-600">
-          Belum punya akun?{' '}
-          <Link to="/register" className="text-orange-500 hover:underline font-medium">
+          Belum punya akun?{" "}
+          <Link
+            to="/register"
+            className="text-orange-500 hover:underline font-medium"
+          >
             Daftar
           </Link>
         </p>
@@ -96,3 +118,4 @@ const LoginForm = () => {
 };
 
 export default LoginForm;
+
