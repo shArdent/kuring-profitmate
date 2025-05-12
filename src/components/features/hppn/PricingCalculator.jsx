@@ -1,23 +1,68 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from "react";
 
 const PricingCalculator = () => {
-  const [productCount, setProductCount] = useState('');
-  const [initialInventory, setInitialInventory] = useState('');
-  const [finalInventory, setFinalInventory] = useState('');
-  const [marginProfit, setMarginProfit] = useState('50%');
+  const [hppData, setHPPData] = useState(null);
+  const [productCount, setProductCount] = useState("");
+  const [initialInventory, setInitialInventory] = useState("");
+  const [finalInventory, setFinalInventory] = useState("");
+  const [marginProfit, setMarginProfit] = useState("50%");
   const [tableData, setTableData] = useState([
-    { tanggal: 'Jan 1, 2024', jumlahProduk: '2.500', marginKeuntungan: '75%', persediaanAwal: 'Rp. 0', persediaanAkhir: 'Rp. 96.428.571', hargaPokokPenjualan: 'Rp. 64.285.725' },
-    { tanggal: 'Feb 1, 2024', jumlahProduk: '1000', marginKeuntungan: '75%', persediaanAwal: 'Rp. 51.428.571', persediaanAkhir: 'Rp. 34.285.714', hargaPokokPenjualan: 'Rp. 51.428.571' },
-    { tanggal: 'Mar 1, 2024', jumlahProduk: '1.500', marginKeuntungan: '75%', persediaanAwal: 'Rp. 34.285.714', persediaanAkhir: 'Rp. 6.435.643', hargaPokokPenjualan: 'Rp. 25.741.286' },
-    { tanggal: 'Apr 1, 2024', jumlahProduk: '2.000', marginKeuntungan: '75%', persediaanAwal: 'Rp. 6.435.643', persediaanAkhir: 'Rp. 0', hargaPokokPenjualan: 'Rp. 38.751.435' },
-    { tanggal: 'Mei 1, 2024', jumlahProduk: '2.500', marginKeuntungan: '75%', persediaanAwal: 'Rp. 0', persediaanAkhir: 'Rp. 0', hargaPokokPenjualan: 'Rp. 51.428.571' },
-    { tanggal: 'Jun 1, 2024', jumlahProduk: '3.000', marginKeuntungan: '75%', persediaanAwal: 'Rp. 0', persediaanAkhir: 'Rp. 5.510.204', hargaPokokPenjualan: 'Rp. 77.142.870' },
+    {
+      tanggal: "Jan 1, 2024",
+      jumlahProduk: "2.500",
+      marginKeuntungan: "75%",
+      persediaanAwal: "Rp. 0",
+      persediaanAkhir: "Rp. 96.428.571",
+      hargaPokokPenjualan: "Rp. 64.285.725",
+    },
+    {
+      tanggal: "Feb 1, 2024",
+      jumlahProduk: "1000",
+      marginKeuntungan: "75%",
+      persediaanAwal: "Rp. 51.428.571",
+      persediaanAkhir: "Rp. 34.285.714",
+      hargaPokokPenjualan: "Rp. 51.428.571",
+    },
+    {
+      tanggal: "Mar 1, 2024",
+      jumlahProduk: "1.500",
+      marginKeuntungan: "75%",
+      persediaanAwal: "Rp. 34.285.714",
+      persediaanAkhir: "Rp. 6.435.643",
+      hargaPokokPenjualan: "Rp. 25.741.286",
+    },
+    {
+      tanggal: "Apr 1, 2024",
+      jumlahProduk: "2.000",
+      marginKeuntungan: "75%",
+      persediaanAwal: "Rp. 6.435.643",
+      persediaanAkhir: "Rp. 0",
+      hargaPokokPenjualan: "Rp. 38.751.435",
+    },
+    {
+      tanggal: "Mei 1, 2024",
+      jumlahProduk: "2.500",
+      marginKeuntungan: "75%",
+      persediaanAwal: "Rp. 0",
+      persediaanAkhir: "Rp. 0",
+      hargaPokokPenjualan: "Rp. 51.428.571",
+    },
+    {
+      tanggal: "Jun 1, 2024",
+      jumlahProduk: "3.000",
+      marginKeuntungan: "75%",
+      persediaanAwal: "Rp. 0",
+      persediaanAkhir: "Rp. 5.510.204",
+      hargaPokokPenjualan: "Rp. 77.142.870",
+    },
   ]);
 
   const handleCalculate = () => {
     // Calculation logic would go here
-    console.log('Calculating...');
+    console.log("Calculating...");
   };
+
+  useEffect(() => {}, []);
 
   return (
     <>
@@ -74,8 +119,17 @@ const PricingCalculator = () => {
                 <option value="100%">100%</option>
               </select>
               <div className="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-500" viewBox="0 0 20 20" fill="currentColor">
-                  <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-5 w-5 text-gray-500"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                    clipRule="evenodd"
+                  />
                 </svg>
               </div>
             </div>

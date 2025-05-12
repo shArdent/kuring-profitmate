@@ -1,46 +1,65 @@
-import React, { useState } from 'react';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
-import { PieChart, Pie, Cell, Tooltip as PieTooltip } from 'recharts';
-import { BarChart, Bar, Legend } from 'recharts';
-import DashboardLayout from '../layouts/DashboardLayout';
-import DashboardCards from '../components/features/dashboard/DashboardCards';
-
+import React, { useEffect, useState } from "react";
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+} from "recharts";
+import { PieChart, Pie, Cell, Tooltip as PieTooltip } from "recharts";
+import { BarChart, Bar, Legend } from "recharts";
+import DashboardLayout from "../layouts/DashboardLayout";
+import DashboardCards from "../components/features/dashboard/DashboardCards";
+import { getPeriod } from "../utils/api";
+import { format } from "date-fns";
+import { id } from "date-fns/locale";
 
 const Dashboard = () => {
+  const [periods, setPeriods] = useState(null);
   // Data for profit/loss chart
   const profitData = [
-    { name: 'Periode 1', value: 20000000 },
-    { name: 'Periode 2', value: 34000000 },
-    { name: 'Periode 3', value: 22000000 },
+    { name: "Periode 1", value: 20000000 },
+    { name: "Periode 2", value: 34000000 },
+    { name: "Periode 3", value: 22000000 },
   ];
 
   // Data for expense ratio chart
   const expenseData = [
-    { name: 'Harga Pokok Penjualan', value: 580000, percentage: '40.50%', color: '#7c82ec' },
-    { name: 'Biaya Operasional', value: 750000, percentage: '53.06%', color: '#f87d8e' },
-    { name: 'Biaya Lain-lain & Pajak', value: 92000, percentage: '6.44%', color: '#7fe7f3' },
+    {
+      name: "Harga Pokok Penjualan",
+      value: 580000,
+      percentage: "40.50%",
+      color: "#7c82ec",
+    },
+    {
+      name: "Biaya Operasional",
+      value: 750000,
+      percentage: "53.06%",
+      color: "#f87d8e",
+    },
+    {
+      name: "Biaya Lain-lain & Pajak",
+      value: 92000,
+      percentage: "6.44%",
+      color: "#7fe7f3",
+    },
   ];
 
   // Data for income expense comparison
   const comparisonData = [
-    { name: 'Nominal (Rp)', Pendapatan: 22000000, Pengeluaran: 14220000 },
+    { name: "Nominal (Rp)", Pendapatan: 22000000, Pengeluaran: 14220000 },
   ];
 
   // State for current period dropdown
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [currentPeriod, setCurrentPeriod] = useState({
-    name: 'Periode 4',
-    range: 'Maret 2024 - Juni 2024'
-  });
-
-  const periods = [
-    { name: 'Periode 3', range: 'Jan 2024 - Feb 2024' },
-    { name: 'Periode 2', range: 'Oct 2023 - Dec 2023' },
-    { name: 'Periode 1', range: 'Jul 2023 - Sep 2023' }
-  ];
+  const [currentPeriod, setCurrentPeriod] = useState(null);
 
   const handlePeriodChange = (period) => {
     setCurrentPeriod(period);
+
+    console.log(period.id);
     setIsDropdownOpen(false);
   };
 
@@ -49,32 +68,53 @@ const Dashboard = () => {
     totalIncome: 22000000,
     totalExpense: 14220000,
     netProfit: 7780000,
-    profitMargin: '35.36%'
+    profitMargin: "35.36%",
   };
+
+  const getUserPeriod = async () => {
+    const data = await getPeriod();
+
+    setPeriods(data);
+  };
+
+  useEffect(() => {
+    getUserPeriod();
+  }, []);
 
   return (
     <DashboardLayout title="Dashboard">
       <div className="p-6">
-        <h1 className="text-2xl font-bold mb-4 px-10">Laba Rugi Antar Periode</h1>
+        <h1 className="text-2xl font-bold mb-4 px-10">
+          Laba Rugi Antar Periode
+        </h1>
         <div className="bg-gray-100 p-4"></div>
         {/* Dashboard cards component */}
         <DashboardCards data={summaryData} />
-        
+
         {/* Profit/Loss Chart */}
         <div className="px-10">
-        <div className="bg-white p-4 rounded-lg shadow mb-16 ">
-          <ResponsiveContainer width="100%" height={300}>
-            <LineChart data={profitData} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
-              <CartesianGrid strokeDasharray="3 3" vertical={false} />
-              <XAxis dataKey="name" />
-              <YAxis />
-              <Tooltip />
-              <Line type="monotone" dataKey="value" stroke="#8884d8" activeDot={{ r: 8 }} name="Laba Bersih" />
-            </LineChart>
-          </ResponsiveContainer>
+          <div className="bg-white p-4 rounded-lg shadow mb-16 ">
+            <ResponsiveContainer width="100%" height={300}>
+              <LineChart
+                data={profitData}
+                margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+              >
+                <CartesianGrid strokeDasharray="3 3" vertical={false} />
+                <XAxis dataKey="name" />
+                <YAxis />
+                <Tooltip />
+                <Line
+                  type="monotone"
+                  dataKey="value"
+                  stroke="#8884d8"
+                  activeDot={{ r: 8 }}
+                  name="Laba Bersih"
+                />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
         </div>
-        </div>
-        
+
         {/* Current Period */}
         <div className="mb-6">
           <h2 className="text-xl font-bold mb-4 px-10 ">Periode Saat Ini</h2>
@@ -87,8 +127,25 @@ const Dashboard = () => {
               className="bg-blue-500 text-white p-4 rounded-lg mt-8 flex items-center justify-between cursor-pointer"
             >
               <div>
-                <h3 className="text-lg font-semibold">{currentPeriod.name}</h3>
-                <p>{currentPeriod.range}</p>
+                {currentPeriod ? (
+                  <>
+                    <h3 className="text-lg font-semibold">
+                      {currentPeriod.name}
+                    </h3>
+                    <p>
+                      Pilih periode
+                      {format(currentPeriod.startDate, "MMM yyy", {
+                        locale: id,
+                      })}{" "}
+                      -{" "}
+                      {format(currentPeriod.startDate, "MMM yyy", {
+                        locale: id,
+                      })}
+                    </p>
+                  </>
+                ) : (
+                  <h3 className="text-lg font-semibold">Pilih Periode</h3>
+                )}
               </div>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -97,7 +154,12 @@ const Dashboard = () => {
                 viewBox="0 0 24 24"
                 stroke="currentColor"
               >
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M19 9l-7 7-7-7"
+                />
               </svg>
             </div>
 
@@ -111,7 +173,9 @@ const Dashboard = () => {
                       className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
                       onClick={() => handlePeriodChange(period)}
                     >
-                      {period.name}: {period.range}
+                      {period.name}:{" "}
+                      {format(period.startDate, "MMM yyy", { locale: id })} -{" "}
+                      {format(period.startDate, "MMM yyy", { locale: id })}
                     </li>
                   ))}
                 </ul>
@@ -151,21 +215,27 @@ const Dashboard = () => {
                 {expenseData.map((item, index) => (
                   <div key={index} className="mb-2">
                     <div className="flex items-center mb-1">
-                      <div className="w-3 h-3 rounded-full mr-2" style={{ backgroundColor: item.color }}></div>
+                      <div
+                        className="w-3 h-3 rounded-full mr-2"
+                        style={{ backgroundColor: item.color }}
+                      ></div>
                       <span className="text-sm">{item.name}</span>
                     </div>
                     <div className="text-sm text-gray-600">
-                      {new Intl.NumberFormat('id-ID').format(item.value)} ({item.percentage})
+                      {new Intl.NumberFormat("id-ID").format(item.value)} (
+                      {item.percentage})
                     </div>
                   </div>
                 ))}
               </div>
             </div>
           </div>
-          
+
           {/* Income & Expense Ratio */}
           <div className="bg-white p-4 rounded-lg shadow">
-            <h2 className="text-xl font-bold mb-4">Rasio Pendapatan & Pengeluaran</h2>
+            <h2 className="text-xl font-bold mb-4">
+              Rasio Pendapatan & Pengeluaran
+            </h2>
             <ResponsiveContainer width="100%" height={300}>
               <BarChart data={comparisonData}>
                 <CartesianGrid strokeDasharray="3 3" />

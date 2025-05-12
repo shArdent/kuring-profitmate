@@ -1,34 +1,51 @@
 // src/components/auth/RegisterForm.jsx
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import apiClient from "../../utils/axios";
 
 const RegisterForm = () => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    fullName: '',
-    username: '',
-    email: '',
-    password: '',
-    confirmPassword: ''
+    fullName: "",
+    businessName: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
   });
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Implementasi register akan ditambahkan di sini
-    console.log('Register form submitted:', formData);
+
+    try {
+      const res = await apiClient.post("/auth/register", {
+        name: formData.fullName,
+        email: formData.email,
+        password: formData.confirmPassword,
+        businessName: formData.businessName,
+      });
+      navigate("/dashboard");
+    } catch (error) {
+      console.log(error);
+    }
+
+    console.log("Register form submitted:", formData);
   };
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div>
-        <label htmlFor="fullName" className="block text-sm font-bold text-gray-700 mb-6 mt-12">
+        <label
+          htmlFor="fullName"
+          className="block text-sm font-bold text-gray-700 mb-6 mt-12"
+        >
           Nama Lengkap
         </label>
         <input
@@ -42,25 +59,31 @@ const RegisterForm = () => {
           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-orange"
         />
       </div>
-      
+
       <div>
-        <label htmlFor="username" className="block text-sm font-bold text-gray-700 mb-6">
+        <label
+          htmlFor="businessName"
+          className="block text-sm font-bold text-gray-700 mb-6"
+        >
           Nama Usaha
         </label>
         <input
           type="text"
-          id="username"
-          name="username"
+          id="businessName"
+          name="businessName"
           placeholder="Masukkan nama usaha anda"
-          value={formData.username}
+          value={formData.businessName}
           onChange={handleChange}
           required
           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-orange"
         />
       </div>
-      
+
       <div>
-        <label htmlFor="email" className="block text-sm font-bold text-gray-700 mb-6">
+        <label
+          htmlFor="email"
+          className="block text-sm font-bold text-gray-700 mb-6"
+        >
           Alamat Email
         </label>
         <input
@@ -74,9 +97,12 @@ const RegisterForm = () => {
           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-orange"
         />
       </div>
-      
+
       <div>
-        <label htmlFor="password" className="block text-sm font-bold text-gray-700 mb-6">
+        <label
+          htmlFor="password"
+          className="block text-sm font-bold text-gray-700 mb-6"
+        >
           Password
         </label>
         <input
@@ -90,9 +116,12 @@ const RegisterForm = () => {
           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-orange"
         />
       </div>
-      
+
       <div>
-        <label htmlFor="confirmPassword" className="block text-sm font-bold text-gray-700 mb-6">
+        <label
+          htmlFor="confirmPassword"
+          className="block text-sm font-bold text-gray-700 mb-6"
+        >
           Konfirmasi Password
         </label>
         <input
@@ -106,7 +135,7 @@ const RegisterForm = () => {
           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-orange"
         />
       </div>
-      
+
       <div className="flex justify-center">
         <button
           type="submit"
@@ -115,10 +144,10 @@ const RegisterForm = () => {
           Daftar
         </button>
       </div>
-      
+
       <div className="text-center mt-4">
         <p className="text-sm text-gray-600 font-bold">
-          Sudah punya akun?{' '}
+          Sudah punya akun?{" "}
           <Link to="/login" className="text-orange hover:underline font-bold">
             Masuk
           </Link>
