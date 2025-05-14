@@ -88,7 +88,7 @@ const Dashboard = () => {
       setPeriods(data);
     } catch (error) {
       navigate("/login");
-    } 
+    }
   };
 
   useEffect(() => {
