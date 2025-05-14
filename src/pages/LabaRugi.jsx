@@ -1,16 +1,30 @@
 import React, { useState } from 'react';
-import DatePicker from '../components/ui/DatePicker';
-import Button from '../components/ui/Button';
 import Sidebar from '../components/ui/Sidebar';
-import Table from '../components/ui/Table';
-import ProfitLossChart from '../components/features/reports/ProfitLossChart';
+import PeriodDropdown from '../components/common/PeriodDropdown';
+import { parseISO } from 'date-fns';
+import { Line } from 'react-chartjs-2';
+import 'chart.js/auto';
+import Card from '../components/ui/Card';
+import SummaryBox from '../components/ui/SummaryBox';
 
 const LabaRugi = () => {
-  // Basic state
-  const [periode, setPeriode] = useState('');
-  const [jumlahProdukTerjual, setJumlahProdukTerjual] = useState('');
-  
-  // Sample data for the chart
+  const [selectedPeriod, setSelectedPeriod] = useState(null);
+
+  // Data Periode
+  const periodData = [
+    {
+      name: 'Q1 2024',
+      startDate: parseISO('2024-01-01'),
+      endDate: parseISO('2024-03-31')
+    },
+    {
+      name: 'Q2 2024',
+      startDate: parseISO('2024-04-01'),
+      endDate: parseISO('2024-06-30')
+    }
+  ];
+
+  // Data Chart
   const profitLossData = [
     {
       tanggal: 'Jan 31, 2024',
@@ -50,7 +64,7 @@ const LabaRugi = () => {
     }
   ];
 
-  // Table data
+  // Data Tabel
   const tableData = [
     { id: 1, tanggal: 'Jan 31, 2024', persediaan: '2.500', produk: '1000', pendapatan: 'Rp. 45.000.000', hppn: 'Rp. 64.285.725', labaRugi: 'Rp. 19.285.710' },
     { id: 2, tanggal: 'Feb 29, 2024', persediaan: '2.500', produk: '1.500', pendapatan: 'Rp. 67.500.000', hppn: 'Rp. 25.741.286', labaRugi: 'Rp. 28.928.565' },
@@ -60,7 +74,6 @@ const LabaRugi = () => {
     { id: 6, tanggal: 'Jun 30, 2024', persediaan: '3.000', produk: '2.800', pendapatan: 'Rp. 126.000.000', hppn: 'Rp. 77.142.870', labaRugi: 'Rp. 48.857.130' }
   ];
 
-  // Table columns definition
   const columns = [
     { key: 'tanggal', header: 'Tanggal', width: '15%' },
     { key: 'persediaan', header: 'Persediaan Produk', width: '15%' },
@@ -70,78 +83,98 @@ const LabaRugi = () => {
     { key: 'labaRugi', header: 'Laba/Rugi', width: '20%' }
   ];
 
-  // Basic form submission
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log('Form submitted:', periode, jumlahProdukTerjual);
-  };
-
   return (
     <div className="flex min-h-screen">
-      <Sidebar /> {/* Sidebar di sebelah kiri */}
+      <Sidebar />
       <div className="flex-1 p-6 bg-gray-50">
-        <h1 className="text-2xl font-bold mb-6 px-10">Laporan Laba/Rugi</h1>
-        
-        {/* Form */}
-        {/* Form */}
-<div className="mt-8 px-10">
-  <form onSubmit={handleSubmit}>
-    {/* Baris input */}
-    <div className="flex flex-wrap gap-6 mb-4">
-      <div className="w-72">
-        <label className="block text-sm font-semibold mb-1">Periode</label>
-        <DatePicker
-          name="periode"
-          value={periode}
-          onChange={(value) => setPeriode(value)}
-          placeholder="Pilih Periode"
-        />
-      </div>
+        <h1 className="text-2xl font-bold px-10">Laporan Laba/Rugi</h1>
 
-      <div className="w-140 px-8">
-        <label htmlFor="jumlahProduk" className="block text-sm font-semibold text-gray-700 mb-1">
-          Jumlah Produk Terjual
-        </label>
-        <input
-          type="text"
-          id="jumlahProduk"
-          value={jumlahProdukTerjual}
-          onChange={(e) => setJumlahProdukTerjual(e.target.value)}
-          placeholder="Masukan jumlah produk terjual"
-          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-orange-500"
-        />
-      </div>
-    </div>
-
-    {/* Tombol pindah ke bawah kiri */}
-    <div className="mt-4">
-      <Button type="submit" variant="primary">
-        Tampilkan
-      </Button>
-    </div>
-  </form>
-</div>
-
-
-        {/* Chart Section */}
-        <div className="mb-8 mt-8 px-10 ">
-          <h2 className="text-xl font-bold mb-4 ">Grafik Laba/Rugi</h2>
-          <div className="mt-4">
-          <ProfitLossChart data={profitLossData} />
-          </div>
-        </div>
-
-        {/* Table Section */}
-        <div className="px-10">
-          <h2 className="text-xl font-bold ">Laporan Laba/Rugi</h2>
-          <div className="mt-4">
-          <Table 
-            columns={columns} 
-            data={tableData} 
-            emptyMessage="Tidak ada data laporan laba/rugi" 
+        {/* Period Picker */}
+        <div className="mb-8 w-[320px]">
+          <PeriodDropdown
+            periodData={periodData}
+            onChange={(value) => setSelectedPeriod(value)}
           />
-          </div>
         </div>
+
+        {/* Grafik */}
+<div className="mb-8 mx-auto bg-white rounded-lg shadow h-[500px] w-full max-w-5xl px-6">
+          <Line
+            data={{
+              labels: profitLossData.map((d) => d.tanggal),
+              datasets: [
+                {
+                  label: 'Pendapatan',
+                  borderColor: '#22d3ee',
+                  backgroundColor: '#22d3ee',
+                  data: profitLossData.map((d) =>
+                    Number(d.pendapatan.replace(/[^0-9,-]+/g, ''))
+                  )
+                },
+                {
+                  label: 'HPPn',
+                  borderColor: '#f87171',
+                  backgroundColor: '#f87171',
+                  data: profitLossData.map((d) =>
+                    Number(d.hppn.replace(/[^0-9,-]+/g, ''))
+                  )
+                },
+                {
+                  label: 'Laba Rugi',
+                  borderColor: '#c084fc',
+                  backgroundColor: '#c084fc',
+                  data: profitLossData.map((d) =>
+                    Number(d.labaRugi.replace(/[^0-9,-]+/g, ''))
+                  )
+                }
+              ]
+            }}
+          />
+        </div>
+
+        {/* Ringkasan */}
+        <div className="grid grid-cols-3 gap-4 px-10 mb-8">
+          <SummaryBox label="Laba Operasional" value={9220000} />
+          <SummaryBox label="Laba Kotor" value={16820000} />
+          <SummaryBox label="Laba Bersih" value={8298000} />
+        </div>
+
+        {/* Kartu Detail */}
+        <div className="grid grid-cols-2 gap-6 px-10">
+          <Card
+            title="Pendapatan"
+            items={[{ label: 'Penjualan Produk', value: 22620000 }]}
+            total={22620000}
+            totalColor="text-green-600"
+          />
+          <Card
+            title="Beban Operasional"
+            items={[
+              { label: 'Sewa Pabrik', value: 3800000 },
+              { label: 'Penyusutan Mesin', value: 1800000 },
+              { label: 'Gaji Karyawan', value: 2000000 }
+            ]}
+            total={7600000}
+            totalColor="text-red-600"
+          />
+          <Card
+            title="Harga Pokok Penjualan (HPPn)"
+            items={[
+              { label: 'Persediaan Awal', value: 800000 },
+              { label: 'Harga Pokok Produksi', value: 5800000 },
+              { label: 'Persediaan Akhir', value: 800000 }
+            ]}
+            total={5800000}
+            totalColor="text-red-600"
+          />
+          <Card
+            title="Beban Lain-lain & Pajak"
+            items={[{ label: 'Pajak', value: 992000 }]}
+            total={992000}
+            totalColor="text-red-600"
+          />
+        </div>
+
       </div>
     </div>
   );

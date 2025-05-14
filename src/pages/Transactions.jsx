@@ -237,14 +237,14 @@ const Transactions = () => {
             Tambah Transaksi
           </button>
         </div>
-        
-        <div className="mb-6">
-          <TransactionFilters 
-            onSearch={handleSearch}
-            onDateRangeChange={handleDateRangeChange}
-            onTypeChange={handleTypeChange}
-          />
-        </div>
+          
+          <div className="mb-6">
+            <TransactionFilters 
+              onSearch={handleSearch}
+              onDateRangeChange={handleDateRangeChange}
+              onTypeChange={handleTypeChange}
+            />
+          </div>
         
         <h2 className="text-lg font-medium mb-4">Daftar Transaksi</h2>
         

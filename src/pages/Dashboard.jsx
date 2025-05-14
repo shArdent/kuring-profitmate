@@ -13,8 +13,7 @@ import { BarChart, Bar, Legend } from "recharts";
 import DashboardLayout from "../layouts/DashboardLayout";
 import DashboardCards from "../components/features/dashboard/DashboardCards";
 import { getPeriod } from "../utils/api";
-import { format } from "date-fns";
-import { id } from "date-fns/locale";
+import PeriodDropdown from "../components/common/PeriodDropdown";
 
 const Dashboard = () => {
   const [periods, setPeriods] = useState(null);
@@ -52,17 +51,6 @@ const Dashboard = () => {
     { name: "Nominal (Rp)", Pendapatan: 22000000, Pengeluaran: 14220000 },
   ];
 
-  // State for current period dropdown
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [currentPeriod, setCurrentPeriod] = useState(null);
-
-  const handlePeriodChange = (period) => {
-    setCurrentPeriod(period);
-
-    console.log(period.id);
-    setIsDropdownOpen(false);
-  };
-
   // Summary data for dashboard cards
   const summaryData = {
     totalIncome: 22000000,
@@ -70,6 +58,27 @@ const Dashboard = () => {
     netProfit: 7780000,
     profitMargin: "35.36%",
   };
+
+  const periodData = [
+    {
+      id: 1,
+      name: "period1",
+      startDate: new Date(),
+      endDate: new Date(),
+    },
+    {
+      id: 2,
+      name: "period2",
+      startDate: new Date(),
+      endDate: new Date(),
+    },
+    {
+      id: 3,
+      name: "period3",
+      startDate: new Date(),
+      endDate: new Date(),
+    },
+  ];
 
   const getUserPeriod = async () => {
     const data = await getPeriod();
@@ -87,7 +96,7 @@ const Dashboard = () => {
         <h1 className="text-2xl font-bold mb-4 px-10">
           Laba Rugi Antar Periode
         </h1>
-        <div className="bg-gray-100 p-4"></div>
+        <div className="p-4"></div>
         {/* Dashboard cards component */}
         <DashboardCards data={summaryData} />
 
@@ -120,68 +129,8 @@ const Dashboard = () => {
           <h2 className="text-xl font-bold mb-4 px-10 ">Periode Saat Ini</h2>
 
           {/* Wrapper dengan relative untuk dropdown */}
-          <div className="relative px-10">
-            {/* Box biru sebagai trigger */}
-            <div
-              onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-              className="bg-blue-500 text-white p-4 rounded-lg mt-8 flex items-center justify-between cursor-pointer"
-            >
-              <div>
-                {currentPeriod ? (
-                  <>
-                    <h3 className="text-lg font-semibold">
-                      {currentPeriod.name}
-                    </h3>
-                    <p>
-                      Pilih periode
-                      {format(currentPeriod.startDate, "MMM yyy", {
-                        locale: id,
-                      })}{" "}
-                      -{" "}
-                      {format(currentPeriod.startDate, "MMM yyy", {
-                        locale: id,
-                      })}
-                    </p>
-                  </>
-                ) : (
-                  <h3 className="text-lg font-semibold">Pilih Periode</h3>
-                )}
-              </div>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-6 w-6"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M19 9l-7 7-7-7"
-                />
-              </svg>
-            </div>
 
-            {/* Dropdown, DIPINDAHKAN KE LUAR box biru */}
-            {isDropdownOpen && (
-              <div className="absolute top-full left-0 right-0 bg-white text-gray-800 rounded-b-lg shadow-lg z-10">
-                <ul>
-                  {periods.map((period, index) => (
-                    <li
-                      key={index}
-                      className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
-                      onClick={() => handlePeriodChange(period)}
-                    >
-                      {period.name}:{" "}
-                      {format(period.startDate, "MMM yyy", { locale: id })} -{" "}
-                      {format(period.startDate, "MMM yyy", { locale: id })}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
-          </div>
+          <PeriodDropdown periodData={periodData} />
         </div>
 
         {/* Charts Section */}
