@@ -8,7 +8,7 @@ const LoginForm = () => {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
-    rememberMe: false,
+    remember: false,
   });
 
   const handleChange = (e) => {
@@ -32,7 +32,10 @@ const LoginForm = () => {
   return (
     <form onSubmit={handleSubmit} className="space-y-8">
       <div>
-        <label htmlFor="email" className="block text-sm font-bold text-gray-700 mb-6 mt-12">
+        <label
+          htmlFor="email"
+          className="block text-sm font-bold text-gray-700 mb-6 mt-12"
+        >
           Alamat Email
         </label>
         <input
@@ -48,7 +51,10 @@ const LoginForm = () => {
       </div>
 
       <div>
-        <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
+        <label
+          htmlFor="password"
+          className="block text-sm font-medium text-gray-700 mb-1"
+        >
           Password
         </label>
         <input
@@ -67,21 +73,24 @@ const LoginForm = () => {
         <div className="flex items-center">
           <input
             type="checkbox"
-            id="rememberMe"
-            name="rememberMe"
+            id="remember"
+            name="remember"
             className="h-4 w-4 text-orange border-gray-300 rounded"
-            checked={formData.rememberMe}
+            checked={formData.remember}
             onChange={handleChange}
           />
           <label
-            htmlFor="rememberMe"
+            htmlFor="remember"
             className="ml-2 block text-sm text-gray-700"
           >
             Ingat saya
           </label>
         </div>
-        
-        <Link to="/forgot-password" className="text-sm text-orange-500 hover:underline">
+
+        <Link
+          to="/forgot-password"
+          className="text-sm text-orange-500 hover:underline"
+        >
           Lupa Password?
         </Link>
       </div>
@@ -98,8 +107,11 @@ const LoginForm = () => {
 
       <div className="text-center mt-4">
         <p className="text-sm text-gray-600 font-bold">
-          Belum punya akun?{' '}
-          <Link to="/register" className="text-orange-500 hover:underline font-medium">
+          Belum punya akun?{" "}
+          <Link
+            to="/register"
+            className="text-orange-500 hover:underline font-medium"
+          >
             Daftar
           </Link>
         </p>

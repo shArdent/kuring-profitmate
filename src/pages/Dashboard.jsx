@@ -12,12 +12,15 @@ import { PieChart, Pie, Cell, Tooltip as PieTooltip } from "recharts";
 import { BarChart, Bar, Legend } from "recharts";
 import DashboardLayout from "../layouts/DashboardLayout";
 import DashboardCards from "../components/features/dashboard/DashboardCards";
-import { getPeriod } from "../utils/api";
+import { getPeriod, getReport } from "../utils/api";
 import { format } from "date-fns";
 import { id } from "date-fns/locale";
+import { Navigate, useNavigate } from "react-router-dom";
 
 const Dashboard = () => {
   const [periods, setPeriods] = useState(null);
+  const [reportData, setReportData] = useState(null);
+  const navigate = useNavigate();
   // Data for profit/loss chart
   const profitData = [
     { name: "Periode 1", value: 20000000 },
@@ -63,6 +66,21 @@ const Dashboard = () => {
     setIsDropdownOpen(false);
   };
 
+  const handleGetReport = async () => {
+    try {
+      const resData = await getReport(currentPeriod.id);
+      setReportData(resData);
+    } catch (error) {
+
+      if (error.status === 401) navigate("/login");
+      if (error.status === 404) alert("data dengan periode tersebut tidak ditemukan");
+    }
+  };
+
+  useEffect(() => {
+    if (currentPeriod) handleGetReport();
+  }, [currentPeriod]);
+
   // Summary data for dashboard cards
   const summaryData = {
     totalIncome: 22000000,
@@ -72,9 +90,12 @@ const Dashboard = () => {
   };
 
   const getUserPeriod = async () => {
-    const data = await getPeriod();
-
-    setPeriods(data);
+    try {
+      const data = await getPeriod();
+      setPeriods(data);
+    } catch (error) {
+      navigate("/login");
+    } 
   };
 
   useEffect(() => {
