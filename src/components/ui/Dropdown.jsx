@@ -36,7 +36,7 @@ const Dropdown = ({
   const displayText = selectedOption ? selectedOption.label : placeholder;
 
   return (
-    <div className="mb-4">
+    <div className="w-full">
       {label && (
         <label className="block text-sm font-medium text-gray-700 mb-1">
           {label}

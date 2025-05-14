@@ -1,29 +1,31 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import Dropdown from '../../ui/Dropdown';
+import { useNavigate } from 'react-router-dom'; // Untuk navigasi ke halaman detail
 
 const TransactionForm = ({ onClose, onSubmit, editData = null }) => {
-  // Fungsi untuk mendapatkan tanggal lokal saat ini dengan offset zona waktu
+  const navigate = useNavigate(); // Hook navigasi dari react-router-dom
+
+  // Fungsi untuk mendapatkan tanggal lokal saat ini
   const getCurrentDate = () => {
     const today = new Date();
     const year = today.getFullYear();
-    const month = String(today.getMonth() + 1).padStart(2, '0'); // bulan dimulai dari 0
+    const month = String(today.getMonth() + 1).padStart(2, '0');
     const day = String(today.getDate()).padStart(2, '0');
     return `${year}-${month}-${day}`;
   };
-  
 
   const [formData, setFormData] = useState({
     name: '',
-    date: getCurrentDate(), // Tanggal otomatis hari ini
+    date: getCurrentDate(),
     amount: '',
     type: 'Pemasukan'
   });
-  
+
   const [errors, setErrors] = useState({});
   const isEditMode = !!editData;
 
-  // Initialize form with edit data if provided
+  // Inisialisasi data jika edit mode
   useEffect(() => {
     if (editData) {
       setFormData({
@@ -46,8 +48,7 @@ const TransactionForm = ({ onClose, onSubmit, editData = null }) => {
       ...formData,
       [name]: value
     });
-    
-    // Clear error for this field if it exists
+
     if (errors[name]) {
       setErrors({
         ...errors,
@@ -65,33 +66,32 @@ const TransactionForm = ({ onClose, onSubmit, editData = null }) => {
 
   const validateForm = () => {
     const newErrors = {};
-    
+
     if (!formData.name.trim()) {
       newErrors.name = 'Nama produk harus diisi';
     }
-    
+
     if (!formData.amount) {
       newErrors.amount = 'Nominal harus diisi';
     } else if (isNaN(formData.amount) || parseFloat(formData.amount) <= 0) {
       newErrors.amount = 'Nominal harus berupa angka positif';
     }
-    
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    
+
     if (validateForm()) {
-      // Pastikan selalu menggunakan tanggal hari ini untuk transaksi baru
       const submissionData = {
         ...formData,
-        date: isEditMode ? formData.date : getCurrentDate(), // Gunakan tanggal hari ini untuk transaksi baru
+        date: isEditMode ? formData.date : getCurrentDate(),
         amount: parseFloat(formData.amount),
-        id: editData?.id // Pass the id if in edit mode
+        id: editData?.id
       };
-      
+
       onSubmit(submissionData);
     }
   };
@@ -104,12 +104,12 @@ const TransactionForm = ({ onClose, onSubmit, editData = null }) => {
             {isEditMode ? 'Edit Transaksi' : 'Tambah Transaksi'}
           </h2>
           <button onClick={onClose} className="text-gray-400 hover:text-gray-600">
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path>
             </svg>
           </button>
         </div>
-        
+
         <form onSubmit={handleSubmit} className="p-4">
           <div className="mb-4">
             <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -122,7 +122,7 @@ const TransactionForm = ({ onClose, onSubmit, editData = null }) => {
               name="type"
             />
           </div>
-          
+
           <div className="mb-4">
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Nama Produk
@@ -139,9 +139,7 @@ const TransactionForm = ({ onClose, onSubmit, editData = null }) => {
               <p className="mt-1 text-sm text-red-500">{errors.name}</p>
             )}
           </div>
-          
-          {/* Input tanggal dihapus karena tanggal diatur otomatis ke hari ini */}
-          
+
           <div className="mb-6">
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Nominal Transaksi
@@ -163,7 +161,7 @@ const TransactionForm = ({ onClose, onSubmit, editData = null }) => {
               <p className="mt-1 text-sm text-red-500">{errors.amount}</p>
             )}
           </div>
-          
+
           <div className="flex justify-end space-x-2">
             <button
               type="button"
@@ -172,21 +170,23 @@ const TransactionForm = ({ onClose, onSubmit, editData = null }) => {
             >
               Batal
             </button>
-            {isEditMode ? (
+
+            {isEditMode && (
               <button
-                type="submit"
-                className="bg-orange-500 text-white py-2 px-4 rounded-md hover:bg-orange-600"
+                type="button"
+                onClick={() => navigate(`/transactiondetail/${editData.id}`)}
+                className="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600"
               >
-                Edit
-              </button>
-            ) : (
-              <button
-                type="submit"
-                className="bg-orange-500 text-white py-2 px-4 rounded-md hover:bg-orange-600"
-              >
-                Simpan Transaksi
+                Detail
               </button>
             )}
+
+            <button
+              type="submit"
+              className="bg-orange-500 text-white py-2 px-4 rounded-md hover:bg-orange-600"
+            >
+              {isEditMode ? 'Edit' : 'Simpan Transaksi'}
+            </button>
           </div>
         </form>
       </div>
