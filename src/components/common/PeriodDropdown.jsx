@@ -81,7 +81,13 @@ const PeriodDropdown = ({ currentPeriod, setCurrentPeriod, onAddPeriod }) => {
       setPeriods(periodData);
     } catch (error) {
       setPeriods(periodData);
-      console.log("error fetching periods");
+      console.log("error bang");
+      if (error.status === 401) {
+        navigate("/login");
+      }
+      if (error.status === 404) {
+        toast.error("Data periode tidak ditemukan");
+      }
     }
   };
 

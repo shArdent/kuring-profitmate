@@ -134,12 +134,13 @@ const LabaRugi = () => {
   ];
   const [currentPeriod, setCurrentPeriod] = useState(null);
   const [report, setReport] = useState(null);
+  const [summary, setSummary] = useState(null);
 
   const handleGetReport = async () => {
     try {
       const {
         data: { data },
-      } = await apiClient.get(`/report/${currentPeriod.id}`);
+      } = await apiClient.get(`/report/a/${currentPeriod.id}`);
 
       console.log(data);
       setReport(data);
@@ -148,11 +149,28 @@ const LabaRugi = () => {
     }
   };
 
+  const handleGetSummary = async () => {
+    try {
+      const {
+        data: { data },
+      } = await apiClient.get("/report/laba-rugi");
+      console.log(data);
+      setSummary(data);
+    } catch (error) {
+      console.log(error);
+      toast.error("Gagal mendapatkan data keseluruhan");
+    }
+  };
+
   useEffect(() => {
     if (currentPeriod) {
       handleGetReport();
     }
   }, [currentPeriod]);
+
+  useEffect(() => {
+    handleGetSummary();
+  }, []);
 
   return (
     <div className="flex min-h-screen">
@@ -170,42 +188,52 @@ const LabaRugi = () => {
           </div>
 
           {/* Grafik */}
-          <div className="mb-8 mx-auto bg-white rounded-lg shadow h-[500px] w-full max-w-5xl px-6">
-            <Line
-              data={{
-                labels: profitLossData.map((d) => d.tanggal),
-                datasets: [
-                  {
-                    label: "Pendapatan",
-                    borderColor: "#22d3ee",
-                    backgroundColor: "#22d3ee",
-                    data: profitLossData.map((d) =>
-                      Number(d.pendapatan.replace(/[^0-9,-]+/g, ""))
-                    ),
-                  },
-                  {
-                    label: "HPPn",
-                    borderColor: "#f87171",
-                    backgroundColor: "#f87171",
-                    data: profitLossData.map((d) =>
-                      Number(d.hppn.replace(/[^0-9,-]+/g, ""))
-                    ),
-                  },
-                  {
-                    label: "Laba Rugi",
-                    borderColor: "#c084fc",
-                    backgroundColor: "#c084fc",
-                    data: profitLossData.map((d) =>
-                      Number(d.labaRugi.replace(/[^0-9,-]+/g, ""))
-                    ),
-                  },
-                ],
-              }}
-              options={{
-                responsive: true,
-                maintainAspectRatio: false,
-              }}
-            />
+          <div className="mb-8 flex items-center mx-auto bg-white rounded-lg shadow h-[500px] w-full max-w-5xl px-6">
+            {summary ? (
+              <Line
+                data={{
+                  labels:
+                    summary.length === 1
+                      ? ["", summary[0].periodeName, ""]
+                      : summary.map((d) => d.periodeName),
+                  datasets: [
+                    {
+                      label: "Pendapatan",
+                      borderColor: "#22d3ee",
+                      backgroundColor: "#22d3ee",
+                      data:
+                        summary.length === 1
+                          ? [null, Number(summary[0].pendapatan), null]
+                          : summary.map((d) => Number(d.pendapatan)),
+                    },
+                    {
+                      label: "HPPn",
+                      borderColor: "#f87171",
+                      backgroundColor: "#f87171",
+                      data:
+                        summary.length === 1
+                          ? [null, Number(summary[0].hargaPokokPenjualan), null]
+                          : summary.map((d) => Number(d.hargaPokokPenjualan)),
+                    },
+                    {
+                      label: "Laba Rugi",
+                      borderColor: "#c084fc",
+                      backgroundColor: "#c084fc",
+                      data:
+                        summary.length === 1
+                          ? [null, Number(summary[0].labaBersih), null]
+                          : summary.map((d) => Number(d.labaBersih)),
+                    },
+                  ],
+                }}
+                options={{
+                  responsive: true,
+                  maintainAspectRatio: false,
+                }}
+              />
+            ) : (
+              <h1 className="text-center w-full">Tidak ada data</h1>
+            )}
           </div>
         </div>
 
