@@ -8,6 +8,8 @@ import NotificationModal from "../components/ui/NotificationModal";
 import PeriodDropdown from "../components/common/PeriodDropdown";
 import { getPeriod } from "../utils/api";
 import { useNavigate } from "react-router-dom";
+import apiClient from "../utils/axios";
+import toast from "react-hot-toast";
 
 const periodData = [
   {
@@ -36,14 +38,34 @@ const HPP = () => {
   const [popupValues, setPopupValues] = useState({});
   const [isEditing, setIsEditing] = useState(false);
   const [currentPeriod, setCurrentPeriod] = useState(null);
-  
+
   // Confirmation and notification modals states
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [showNotification, setShowNotification] = useState(false);
   const [notificationMessage, setNotificationMessage] = useState("");
   const [notificationType, setNotificationType] = useState("success");
-  const [deleteInfo, setDeleteInfo] = useState({ type: '', item: null });
-  
+  const [deleteInfo, setDeleteInfo] = useState({ type: "", item: null });
+
+  const [hppData, setHppData] = useState(null);
+
+  const getHppData = async () => {
+    try {
+      const {
+        data: { data },
+      } = await apiClient.get(`/production/${currentPeriod.id}`);
+      setHppData(data);
+    } catch (error) {
+      console.log(error);
+      toast.error("Gagal mendapatkan data")
+    }
+  };
+
+  useEffect(() => {
+    if (currentPeriod) {
+      getHppData();
+    }
+  }, [currentPeriod]);
+
   // State for the three data types
   const [bahanBakuData, setBahanBakuData] = useState([
     { id: 1, namaBahan: "Kain Katun", totalHarga: "Rp10.500.000" },
@@ -99,7 +121,9 @@ const HPP = () => {
   // Popup titles for each type
   const titleMap = {
     bahanBaku: isEditing ? "Edit Biaya Bahan Baku" : "Tambah Biaya Bahan Baku",
-    tenagaKerja: isEditing ? "Edit Biaya Tenaga Kerja" : "Tambah Biaya Tenaga Kerja",
+    tenagaKerja: isEditing
+      ? "Edit Biaya Tenaga Kerja"
+      : "Tambah Biaya Tenaga Kerja",
     beban: isEditing ? "Edit Biaya Beban" : "Tambah Biaya Beban",
   };
 
@@ -107,7 +131,7 @@ const HPP = () => {
   const handleEdit = (type, row) => {
     setPopupType(type);
     setIsEditing(true);
-    
+
     // Set the values based on the row data and type
     if (type === "bahanBaku") {
       setPopupValues({
@@ -128,7 +152,7 @@ const HPP = () => {
         nominalBeban: row.nominalBeban,
       });
     }
-    
+
     setShowPopup(true);
   };
 
@@ -141,21 +165,21 @@ const HPP = () => {
   // Perform actual deletion after confirmation
   const handleDeleteConfirmed = () => {
     const { type, item } = deleteInfo;
-    let deletedItemName = '';
-    
+    let deletedItemName = "";
+
     if (type === "bahanBaku") {
-      setBahanBakuData(bahanBakuData.filter(data => data.id !== item.id));
+      setBahanBakuData(bahanBakuData.filter((data) => data.id !== item.id));
       deletedItemName = item.namaBahan;
     } else if (type === "tenagaKerja") {
-      setTenagaKerjaData(tenagaKerjaData.filter(data => data.id !== item.id));
+      setTenagaKerjaData(tenagaKerjaData.filter((data) => data.id !== item.id));
       deletedItemName = item.namaPekerja;
     } else if (type === "beban") {
-      setBebanData(bebanData.filter(data => data.id !== item.id));
+      setBebanData(bebanData.filter((data) => data.id !== item.id));
       deletedItemName = item.namaBeban;
     }
-    
+
     setShowConfirmation(false);
-    
+
     // Show success notification
     setNotificationMessage(`${deletedItemName} berhasil dihapus`);
     setNotificationType("success");
@@ -165,10 +189,10 @@ const HPP = () => {
   // Get message for confirmation dialog based on item type
   const getConfirmationMessage = () => {
     const { type, item } = deleteInfo;
-    let itemName = '';
-    
-    if (!item) return '';
-    
+    let itemName = "";
+
+    if (!item) return "";
+
     if (type === "bahanBaku") {
       itemName = item.namaBahan;
     } else if (type === "tenagaKerja") {
@@ -176,40 +200,11 @@ const HPP = () => {
     } else if (type === "beban") {
       itemName = item.namaBeban;
     }
-    
+
     return "Periksa Kembali data Anda apabila kurang yakin!";
   };
 
   // Column definitions for each table
-  const columnsMap = {
-    bahanBaku: [
-      { key: "namaBahan", header: "Nama Bahan", width: "45%" },
-      { key: "totalHarga", header: "Total Harga", width: "40%" },
-      {
-        key: "actions",
-        header: "Aksi",
-        width: "15%",
-      },
-    ],
-    tenagaKerja: [
-      { key: "namaPekerja", header: "Nama Pekerja", width: "45%" },
-      { key: "nominalBayaran", header: "Nominal Bayaran", width: "40%" },
-      {
-        key: "actions",
-        header: "Aksi",
-        width: "15%",
-      },
-    ],
-    beban: [
-      { key: "namaBeban", header: "Nama Beban", width: "45%" },
-      { key: "nominalBeban", header: "Nominal Beban", width: "40%" },
-      {
-        key: "actions",
-        header: "Aksi",
-        width: "15%",
-      },
-    ],
-  };
 
   const handleAddClick = (type) => {
     setPopupType(type);
@@ -222,29 +217,41 @@ const HPP = () => {
     if (isEditing) {
       // Update existing item
       if (popupType === "bahanBaku") {
-        setBahanBakuData(bahanBakuData.map(item => 
-          item.id === values.id ? {
-            id: values.id,
-            namaBahan: values.namaBahan,
-            totalHarga: values.totalHarga,
-          } : item
-        ));
+        setBahanBakuData(
+          bahanBakuData.map((item) =>
+            item.id === values.id
+              ? {
+                  id: values.id,
+                  namaBahan: values.namaBahan,
+                  totalHarga: values.totalHarga,
+                }
+              : item
+          )
+        );
       } else if (popupType === "tenagaKerja") {
-        setTenagaKerjaData(tenagaKerjaData.map(item => 
-          item.id === values.id ? {
-            id: values.id,
-            namaPekerja: values.namaPekerja,
-            nominalBayaran: values.nominalBayaran,
-          } : item
-        ));
+        setTenagaKerjaData(
+          tenagaKerjaData.map((item) =>
+            item.id === values.id
+              ? {
+                  id: values.id,
+                  namaPekerja: values.namaPekerja,
+                  nominalBayaran: values.nominalBayaran,
+                }
+              : item
+          )
+        );
       } else if (popupType === "beban") {
-        setBebanData(bebanData.map(item => 
-          item.id === values.id ? {
-            id: values.id,
-            namaBeban: values.namaBeban,
-            nominalBeban: values.nominalBeban,
-          } : item
-        ));
+        setBebanData(
+          bebanData.map((item) =>
+            item.id === values.id
+              ? {
+                  id: values.id,
+                  namaBeban: values.namaBeban,
+                  nominalBeban: values.nominalBeban,
+                }
+              : item
+          )
+        );
       }
     } else {
       // Add new item
@@ -282,20 +289,35 @@ const HPP = () => {
     setIsEditing(false);
   };
 
-  const [periods, setPeriods] = useState(periodData);
-  const navigate = useNavigate();
-  const getUserPeriod = async () => {
-    try {
-      const data = await getPeriod();
-      setPeriods(data);
-    } catch (error) {
-      // navigate("/login");
-    }
+  const columnsMap = {
+    bahanBaku: [
+      { key: "namaBahan", header: "Nama Bahan", width: "45%" },
+      { key: "totalHarga", header: "Total Harga", width: "40%" },
+      {
+        key: "actions",
+        header: "Aksi",
+        width: "15%",
+      },
+    ],
+    tenagaKerja: [
+      { key: "namaPekerja", header: "Nama Pekerja", width: "45%" },
+      { key: "nominalBayaran", header: "Nominal Bayaran", width: "40%" },
+      {
+        key: "actions",
+        header: "Aksi",
+        width: "15%",
+      },
+    ],
+    beban: [
+      { key: "namaBeban", header: "Nama Beban", width: "45%" },
+      { key: "nominalBeban", header: "Nominal Beban", width: "40%" },
+      {
+        key: "actions",
+        header: "Aksi",
+        width: "15%",
+      },
+    ],
   };
-
-  useEffect(() => {
-    getUserPeriod();
-  }, []);
 
   // This function has been replaced by getConfirmationMessage
 
@@ -306,11 +328,14 @@ const HPP = () => {
         <div className="p-6 bg-gray-50">
           <h1 className="text-2xl font-bold mb-6">Harga Pokok Produksi</h1>
 
-            {/* Dropdown Periode */}
+          {/* Dropdown Periode */}
           <div className="mb-6">
             <h2 className="text-lg font-medium mb-2">Periode Saat Ini</h2>
             <div className="w-full">
-              <PeriodDropdown />
+              <PeriodDropdown
+                currentPeriod={currentPeriod}
+                setCurrentPeriod={setCurrentPeriod}
+              />
             </div>
           </div>
 
@@ -325,12 +350,16 @@ const HPP = () => {
                 + Tambah Biaya
               </Button>
             </div>
-            <Table 
-              columns={columnsMap.bahanBaku} 
-              data={bahanBakuData} 
+            <Table
+              columns={columnsMap.bahanBaku}
+              data={hppData ? hppData.bahanBaku : []}
               onEdit={(row) => handleEdit("bahanBaku", row)}
               onDelete={(row) => confirmDelete("bahanBaku", row)}
             />
+            <div className="bg-white shadow rounded-b-lg px-6 py-4 flex justify-between text-sm text-gray-700 border-t">
+              <span className="font-semibold">Total Biaya Bahan Baku</span>
+              <span className="font-semibold">Rp </span>
+            </div>
           </div>
 
           {/* Tenaga Kerja Section */}
@@ -344,12 +373,16 @@ const HPP = () => {
                 + Tambah Biaya
               </Button>
             </div>
-            <Table 
-              columns={columnsMap.tenagaKerja} 
-              data={tenagaKerjaData} 
+            <Table
+              columns={columnsMap.tenagaKerja}
+              data={tenagaKerjaData}
               onEdit={(row) => handleEdit("tenagaKerja", row)}
               onDelete={(row) => confirmDelete("tenagaKerja", row)}
             />
+            <div className="bg-white shadow rounded-b-lg px-6 py-4 flex justify-between text-sm text-gray-700 border-t">
+              <span className="font-semibold">Total Biaya Tenaga Kerja</span>
+              <span className="font-semibold">Rp </span>
+            </div>
           </div>
 
           {/* Beban Section */}
@@ -358,19 +391,20 @@ const HPP = () => {
               <h2 className="text-lg font-bold">
                 Daftar Biaya Beban (overhead)
               </h2>
-              <Button 
-                variant="primary" 
-                onClick={() => handleAddClick("beban")}
-              >
+              <Button variant="primary" onClick={() => handleAddClick("beban")}>
                 + Tambah Biaya
               </Button>
             </div>
-            <Table 
-              columns={columnsMap.beban} 
-              data={bebanData} 
+            <Table
+              columns={columnsMap.beban}
+              data={bebanData}
               onEdit={(row) => handleEdit("beban", row)}
               onDelete={(row) => confirmDelete("beban", row)}
             />
+            <div className="bg-white shadow rounded-b-lg px-6 py-4 flex justify-between text-sm text-gray-700 border-t">
+              <span className="font-semibold">Total Biaya Beban</span>
+              <span className="font-semibold">Rp {"test"}</span>
+            </div>
           </div>
 
           {/* Popup for adding/editing items */}

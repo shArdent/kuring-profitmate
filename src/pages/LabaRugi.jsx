@@ -134,7 +134,34 @@ const LabaRugi = () => {
   ];
   const [currentPeriod, setCurrentPeriod] = useState(null);
   const [report, setReport] = useState(null);
-  const [summary, setSummary] = useState(null);
+  // const [summary, setSummary] = useState(null);
+
+  const summary = [
+    {
+      periodeName: "Jan 2025",
+      pendapatan: 10000000,
+      hargaPokokPenjualan: 6000000,
+      labaBersih: 4000000,
+    },
+    {
+      periodeName: "Feb 2025",
+      pendapatan: 12000000,
+      hargaPokokPenjualan: 7000000,
+      labaBersih: 5000000,
+    },
+    {
+      periodeName: "Mar 2025",
+      pendapatan: 9000000,
+      hargaPokokPenjualan: 5000000,
+      labaBersih: 4000000,
+    },
+    {
+      periodeName: "Apr 2025",
+      pendapatan: 11000000,
+      hargaPokokPenjualan: 6500000,
+      labaBersih: 4500000,
+    },
+  ];
 
   const handleGetReport = async () => {
     try {
@@ -155,7 +182,7 @@ const LabaRugi = () => {
         data: { data },
       } = await apiClient.get("/report/laba-rugi");
       console.log(data);
-      setSummary(data);
+      // setSummary(data);
     } catch (error) {
       console.log(error);
       toast.error("Gagal mendapatkan data keseluruhan");

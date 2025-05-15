@@ -61,17 +61,39 @@ const Dashboard = () => {
     profitMargin: "35.36%",
   };
 
-  const [periods, setPeriods] = useState([]);
   const [currentPeriod, setCurrentPeriod] = useState(null);
-  const [dataLabaBersih, setDataLabaBersih] = useState(null);
+  // const [dataLabaBersih, setDataLabaBersih] = useState(null);
   const [report, setReport] = useState(null);
+
+  const dataLabaBersih = [
+    {
+      periodName: "Jan 2025",
+      labaBersih: 2500000,
+    },
+    {
+      periodName: "Feb 2025",
+      labaBersih: 3200000,
+    },
+    {
+      periodName: "Mar 2025",
+      labaBersih: 2800000,
+    },
+    {
+      periodName: "Apr 2025",
+      labaBersih: 4000000,
+    },
+    {
+      periodName: "Mei 2025",
+      labaBersih: 3500000,
+    },
+  ];
 
   const handleGetLabaBersih = async () => {
     try {
       const {
         data: { data },
       } = await apiClient.get("/report/laba-bersih");
-      setDataLabaBersih(data);
+      // setDataLabaBersih(data);
     } catch (error) {
       toast.error("Gagal mendapatkan data laba bersih");
     }
@@ -99,27 +121,6 @@ const Dashboard = () => {
       handleGetReport();
     }
   }, [currentPeriod]);
-
-  useEffect(() => {
-    if (report) {
-      console.log(report.transactionGroup);
-    }
-  }, [report]);
-
-  const getUserPeriod = async () => {
-    try {
-      const data = await getPeriod();
-      console.log(data)
-      setPeriods(data);
-    } catch (error) {
-      console.log("error bang")
-      // navigate("/login");
-    }
-  };
-
-  useEffect(() => {
-    getUserPeriod();
-  }, []);
 
   return (
     <DashboardLayout title="Dashboard">
@@ -160,7 +161,6 @@ const Dashboard = () => {
           {/* Wrapper dengan relative untuk dropdown */}
 
           <PeriodDropdown
-            periodData={periods}
             currentPeriod={currentPeriod}
             setCurrentPeriod={setCurrentPeriod}
           />

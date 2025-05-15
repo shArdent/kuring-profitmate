@@ -1,8 +1,15 @@
 import { useState, useEffect } from "react";
 import AddPeriod from "./AddPeriod";
+import { getPeriod } from "../../utils/api";
+import { format } from "date-fns";
+import { id } from "date-fns/locale";
+import apiClient from "../../utils/axios";
+import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
 const PeriodDropdown = ({ currentPeriod, setCurrentPeriod, onAddPeriod }) => {
   // Example period data
+  const navigate = useNavigate();
   const periodData = [
     {
       id: 1,
@@ -38,29 +45,19 @@ const PeriodDropdown = ({ currentPeriod, setCurrentPeriod, onAddPeriod }) => {
     setIsAddOpen(false);
   };
 
-  const handleAddSubmit = (data) => {
-    console.log(data);
-  };
+  const handleAddSubmit = async (values) => {
+    try {
+      const {
+        data: { data },
+      } = await apiClient.post("/period", values);
 
-  // Format date function to replace date-fns
-  const formatDate = (date) => {
-    const months = [
-      "Jan",
-      "Feb",
-      "Mar",
-      "Apr",
-      "Mei",
-      "Jun",
-      "Jul",
-      "Agu",
-      "Sep",
-      "Okt",
-      "Nov",
-      "Des",
-    ];
-    const month = months[date.getMonth()];
-    const year = date.getFullYear();
-    return `${month} ${year}`;
+      navigate(-1)
+
+      toast.success("Berhasil menambahkan periode");
+    } catch (error) {
+      console.log(error);
+      toast.error("Gagal menambahkan periode");
+    }
   };
 
   const handlePeriodChange = (period) => {
@@ -69,19 +66,17 @@ const PeriodDropdown = ({ currentPeriod, setCurrentPeriod, onAddPeriod }) => {
   };
 
   const handleAddPeriod = () => {
-    setIsAddOpen(true)
+    setIsAddOpen(true);
     setIsDropdownOpen(false);
   };
 
   const getUserPeriod = async () => {
     try {
       // Simulated API call
-      // const data = await getPeriod();
-      // setPeriods(data);
-      setPeriods(periodData);
+      const data = await getPeriod();
+      setPeriods(data);
     } catch (error) {
-      setPeriods(periodData);
-      console.log("error bang");
+      console.log(error);
       if (error.status === 401) {
         navigate("/login");
       }
@@ -108,8 +103,11 @@ const PeriodDropdown = ({ currentPeriod, setCurrentPeriod, onAddPeriod }) => {
               <>
                 <h3 className="text-lg font-semibold">{currentPeriod.name}</h3>
                 <p>
-                  {formatDate(currentPeriod.startDate)} -{" "}
-                  {formatDate(currentPeriod.endDate)}
+                  {format(currentPeriod.startDate, "MMM yyyy", { locale: id })}{" "}
+                  -{" "}
+                  {format(currentPeriod.endDate, "MMM yyyy", {
+                    locale: id,
+                  })}
                 </p>
               </>
             ) : (
@@ -144,8 +142,8 @@ const PeriodDropdown = ({ currentPeriod, setCurrentPeriod, onAddPeriod }) => {
                 >
                   <div className="font-medium">{period.name}</div>
                   <div className="text-sm text-gray-600">
-                    {formatDate(period.startDate)} -{" "}
-                    {formatDate(period.endDate)}
+                    {format(period.startDate, "MMM yyyy", { locale: id })} -{" "}
+                    {format(period.endDate, "MMM yyyy", { locale: id })}
                   </div>
                 </li>
               ))}

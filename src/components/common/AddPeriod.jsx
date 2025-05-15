@@ -13,7 +13,6 @@ const AddPeriod = ({ isOpen, onClose, onSubmit }) => {
     }
 
     onSubmit({
-      id: Date.now(),
       name,
       startDate: new Date(startDate),
       endDate: new Date(endDate),
@@ -31,7 +30,9 @@ const AddPeriod = ({ isOpen, onClose, onSubmit }) => {
   return (
     <div className="fixed inset-0 bg-opacity-40 flex items-center justify-center z-50">
       <div className="bg-white rounded-xl shadow-lg w-full max-w-md p-6">
-        <h2 className="text-xl font-bold text-center mb-6">Tambah Periode Baru</h2>
+        <h2 className="text-xl font-bold text-center mb-6">
+          Tambah Periode Baru
+        </h2>
 
         <div className="mb-4">
           <label className="block mb-1 font-semibold">Nama Periode</label>
