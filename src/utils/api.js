@@ -35,3 +35,19 @@ export const getReport = async (periodId) => {
 
   return data;
 };
+
+export const postTransaction = async (trxData) => {
+  const {
+    data: { data },
+  } = await apiClient.post("/transaction", trxData);
+
+  return data;
+};
+
+export const getTransactions = async (periodId) => {
+  const {
+    data: { data },
+  } = await apiClient.get(`/transaction/a/${periodId}`);
+
+  return data;
+};

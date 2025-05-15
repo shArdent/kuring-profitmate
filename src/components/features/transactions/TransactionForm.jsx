@@ -1,25 +1,31 @@
-import React, { useState, useEffect } from 'react';
-import PropTypes from 'prop-types';
-import Dropdown from '../../ui/Dropdown';
-import { useNavigate } from 'react-router-dom'; // Untuk navigasi ke halaman detail
+import React, { useState, useEffect } from "react";
+import PropTypes from "prop-types";
+import Dropdown from "../../ui/Dropdown";
+import { useNavigate } from "react-router-dom"; // Untuk navigasi ke halaman detail
 
-const TransactionForm = ({ onClose, onSubmit, editData = null }) => {
+const TransactionForm = ({
+  currentPeriod,
+  onClose,
+  onSubmit,
+  editData = null,
+}) => {
   const navigate = useNavigate(); // Hook navigasi dari react-router-dom
 
   // Fungsi untuk mendapatkan tanggal lokal saat ini
   const getCurrentDate = () => {
     const today = new Date();
     const year = today.getFullYear();
-    const month = String(today.getMonth() + 1).padStart(2, '0');
-    const day = String(today.getDate()).padStart(2, '0');
+    const month = String(today.getMonth() + 1).padStart(2, "0");
+    const day = String(today.getDate()).padStart(2, "0");
     return `${year}-${month}-${day}`;
   };
 
   const [formData, setFormData] = useState({
-    name: '',
+    name: "",
     date: getCurrentDate(),
-    amount: '',
-    type: 'Pemasukan'
+    amount: "",
+    type: "Pemasukan",
+    periodId: currentPeriod?.id,
   });
 
   const [errors, setErrors] = useState({});
@@ -29,30 +35,30 @@ const TransactionForm = ({ onClose, onSubmit, editData = null }) => {
   useEffect(() => {
     if (editData) {
       setFormData({
-        name: editData.name || '',
+        name: editData.name || "",
         date: editData.date || getCurrentDate(),
-        amount: editData.amount ? editData.amount.toString() : '',
-        type: editData.type || 'Pemasukan'
+        amount: editData.amount ? editData.amount.toString() : "",
+        type: editData.type || "Pemasukan",
       });
     }
   }, [editData]);
 
   const transactionTypeOptions = [
-    { value: 'Pemasukan', label: 'Pemasukan' },
-    { value: 'Pengeluaran', label: 'Pengeluaran' },
+    { value: "INCOME", label: "Pemasukan" },
+    { value: "EXPENSE", label: "Pengeluaran" },
   ];
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({
       ...formData,
-      [name]: value
+      [name]: value,
     });
 
     if (errors[name]) {
       setErrors({
         ...errors,
-        [name]: null
+        [name]: null,
       });
     }
   };
@@ -60,7 +66,7 @@ const TransactionForm = ({ onClose, onSubmit, editData = null }) => {
   const handleTypeChange = (option) => {
     setFormData({
       ...formData,
-      type: option.value
+      type: option.value,
     });
   };
 
@@ -68,13 +74,13 @@ const TransactionForm = ({ onClose, onSubmit, editData = null }) => {
     const newErrors = {};
 
     if (!formData.name.trim()) {
-      newErrors.name = 'Nama produk harus diisi';
+      newErrors.name = "Nama produk harus diisi";
     }
 
     if (!formData.amount) {
-      newErrors.amount = 'Nominal harus diisi';
+      newErrors.amount = "Nominal harus diisi";
     } else if (isNaN(formData.amount) || parseFloat(formData.amount) <= 0) {
-      newErrors.amount = 'Nominal harus berupa angka positif';
+      newErrors.amount = "Nominal harus berupa angka positif";
     }
 
     setErrors(newErrors);
@@ -89,10 +95,14 @@ const TransactionForm = ({ onClose, onSubmit, editData = null }) => {
         ...formData,
         date: isEditMode ? formData.date : getCurrentDate(),
         amount: parseFloat(formData.amount),
-        id: editData?.id
+        id: editData?.id,
       };
 
-      onSubmit(submissionData);
+      if (isEditMode) {
+        onSubmit(submissionData);
+        return;
+      }
+      onSubmit(formData);
     }
   };
 
@@ -101,11 +111,24 @@ const TransactionForm = ({ onClose, onSubmit, editData = null }) => {
       <div className="bg-white rounded-lg shadow-lg w-full max-w-md mx-4">
         <div className="flex justify-between items-center border-b p-4">
           <h2 className="text-lg font-medium">
-            {isEditMode ? 'Edit Transaksi' : 'Tambah Transaksi'}
+            {isEditMode ? "Edit Transaksi" : "Tambah Transaksi"}
           </h2>
-          <button onClick={onClose} className="text-gray-400 hover:text-gray-600">
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path>
+          <button
+            onClick={onClose}
+            className="text-gray-400 hover:text-gray-600"
+          >
+            <svg
+              className="w-6 h-6"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M6 18L18 6M6 6l12 12"
+              ></path>
             </svg>
           </button>
         </div>
@@ -132,7 +155,9 @@ const TransactionForm = ({ onClose, onSubmit, editData = null }) => {
               name="name"
               value={formData.name}
               onChange={handleChange}
-              className={`w-full border ${errors.name ? 'border-red-500' : 'border-gray-300'} rounded-md py-2 px-3 focus:outline-none focus:ring-1 focus:ring-orange-500`}
+              className={`w-full border ${
+                errors.name ? "border-red-500" : "border-gray-300"
+              } rounded-md py-2 px-3 focus:outline-none focus:ring-1 focus:ring-orange-500`}
               placeholder="Masukkan nama produk"
             />
             {errors.name && (
@@ -153,7 +178,9 @@ const TransactionForm = ({ onClose, onSubmit, editData = null }) => {
                 name="amount"
                 value={formData.amount}
                 onChange={handleChange}
-                className={`w-full pl-10 border ${errors.amount ? 'border-red-500' : 'border-gray-300'} rounded-md py-2 px-3 focus:outline-none focus:ring-1 focus:ring-orange-500`}
+                className={`w-full pl-10 border ${
+                  errors.amount ? "border-red-500" : "border-gray-300"
+                } rounded-md py-2 px-3 focus:outline-none focus:ring-1 focus:ring-orange-500`}
                 placeholder="0"
               />
             </div>
@@ -185,7 +212,7 @@ const TransactionForm = ({ onClose, onSubmit, editData = null }) => {
               type="submit"
               className="bg-orange-500 text-white py-2 px-4 rounded-md hover:bg-orange-600"
             >
-              {isEditMode ? 'Edit' : 'Simpan Transaksi'}
+              {isEditMode ? "Edit" : "Simpan Transaksi"}
             </button>
           </div>
         </form>
@@ -197,7 +224,7 @@ const TransactionForm = ({ onClose, onSubmit, editData = null }) => {
 TransactionForm.propTypes = {
   onClose: PropTypes.func.isRequired,
   onSubmit: PropTypes.func.isRequired,
-  editData: PropTypes.object
+  editData: PropTypes.object,
 };
 
 export default TransactionForm;
