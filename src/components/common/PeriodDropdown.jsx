@@ -3,29 +3,30 @@ import { id } from "date-fns/locale";
 import { useEffect, useState } from "react";
 import { getPeriod } from "../../utils/api";
 import toast from "react-hot-toast";
-
-const periodData = [
-  {
-    id: 1,
-    name: "period1",
-    startDate: new Date(),
-    endDate: new Date(),
-  },
-  {
-    id: 2,
-    name: "period2",
-    startDate: new Date(),
-    endDate: new Date(),
-  },
-  {
-    id: 3,
-    name: "period3",
-    startDate: new Date(),
-    endDate: new Date(),
-  },
-];
+import { _isDomSupported } from "chart.js/helpers";
 
 const PeriodDropdown = ({ currentPeriod, setCurrentPeriod }) => {
+  const periodData = [
+    {
+      id: 1,
+      name: "period1",
+      startDate: new Date(),
+      endDate: new Date(),
+    },
+    {
+      id: 2,
+      name: "period2",
+      startDate: new Date(),
+      endDate: new Date(),
+    },
+    {
+      id: 3,
+      name: "period3",
+      startDate: new Date(),
+      endDate: new Date(),
+    },
+  ];
+
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   const handlePeriodChange = (period) => {
@@ -34,7 +35,7 @@ const PeriodDropdown = ({ currentPeriod, setCurrentPeriod }) => {
     setIsDropdownOpen(false);
   };
 
-  const [periods, setPeriods] = useState([]);
+  const [periods, setPeriods] = useState(periodData);
 
   const getUserPeriod = async () => {
     try {
@@ -45,7 +46,7 @@ const PeriodDropdown = ({ currentPeriod, setCurrentPeriod }) => {
       setPeriods(periodData);
       console.log("error bang");
       if (error.status === 401) {
-        navigate("/login");
+        // navigate("/login");
       }
       if (error.status === 404) {
         toast.error("Data periode tidak ditemukan");
@@ -102,8 +103,8 @@ const PeriodDropdown = ({ currentPeriod, setCurrentPeriod }) => {
       {isDropdownOpen && (
         <div className="absolute top-full left-0 right-0 bg-white text-gray-800 rounded-b-lg shadow-lg z-10">
           <ul>
-            {periods
-              ? periods?.map((period, index) => (
+            {isDropdownOpen && periods
+              ? periods.map((period, index) => (
                   <li
                     key={index}
                     className="px-4 py-2 hover:bg-gray-100 cursor-pointer"

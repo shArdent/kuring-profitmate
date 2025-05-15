@@ -17,15 +17,11 @@ export const logout = async () => {
 };
 
 export const getPeriod = async () => {
-  try {
-    const {
-      data: { data },
-    } = await apiClient.get("/period");
+  const {
+    data: { data },
+  } = await apiClient.get("/period");
 
-    return data;
-  } catch (error) {
-    return error;
-  }
+  return data;
 };
 
 export const getReport = async (periodId) => {
