@@ -5,63 +5,58 @@ import DateRangePicker from "../../ui/DateRangePicker";
 import Dropdown from "../../ui/Dropdown";
 import PeriodDropdown from "../../common/PeriodDropdown";
 
-const TransactionFilters = ({ onSearch, onDateRangeChange, onTypeChange }) => {
-  const [startDate, setStartDate] = useState("");
-  const [endDate, setEndDate] = useState("");
-
+const TransactionFilters = ({
+  onSearch,
+  onTypeChange,
+  periods,
+  transactionType,
+  currentPeriod,
+  setPeriods,
+}) => {
   const transactionTypeOptions = [
     { value: "", label: "Semua Tipe" },
-    { value: "Pemasukan", label: "Pemasukan" },
-    { value: "Pengeluaran", label: "Pengeluaran" },
+    { value: "INCOME", label: "Pemasukan" },
+    { value: "EXPENSE", label: "Pengeluaran" },
   ];
 
-  const handleStartDateChange = (date) => {
-    setStartDate(date);
-    onDateRangeChange(date, endDate);
+  const getDisplayText = () => {
+    switch (transactionType) {
+      case "INCOME":
+        return "Pemasukan";
+
+      case "EXPENSE":
+        return "Pengeluaran";
+
+      case "":
+        return "Semua";
+
+      default:
+        break;
+    }
   };
 
-  const handleEndDateChange = (date) => {
-    setEndDate(date);
-    onDateRangeChange(startDate, date);
-  };
-
-  const periodData = [
-    {
-      id: 1,
-      name: "period1",
-      startDate: new Date(),
-      endDate: new Date(),
-    },
-    {
-      id: 2,
-      name: "period2",
-      startDate: new Date(),
-      endDate: new Date(),
-    },
-    {
-      id: 3,
-      name: "period3",
-      startDate: new Date(),
-      endDate: new Date(),
-    },
-  ];
+  const displayText = getDisplayText();
 
   return (
-    <div className="flex flex-col md:flex-row justify-between">
+    <div className="flex flex-col gap-5 md:flex-row justify-between">
       <SearchBar
         onSearch={onSearch}
         placeholder="Cari Transaksi"
         debounceTime={300}
       />
 
-      <PeriodDropdown periodData={periodData} />
+      <PeriodDropdown
+        periodData={periods}
+        currentPeriod={currentPeriod}
+        setCurrentPeriod={setPeriods}
+      />
 
       <Dropdown
         label=""
         placeholder="Tipe Transaksi"
         options={transactionTypeOptions}
         onChange={onTypeChange}
-        value=""
+        displayText={displayText}
       />
     </div>
   );

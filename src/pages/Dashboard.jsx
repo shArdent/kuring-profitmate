@@ -14,9 +14,32 @@ import DashboardLayout from "../layouts/DashboardLayout";
 import DashboardCards from "../components/features/dashboard/DashboardCards";
 import { getPeriod } from "../utils/api";
 import PeriodDropdown from "../components/common/PeriodDropdown";
+import { useNavigate } from "react-router-dom";
+
+const periodData = [
+  {
+    id: 1,
+    name: "period1",
+    startDate: new Date(),
+    endDate: new Date(),
+  },
+  {
+    id: 2,
+    name: "period2",
+    startDate: new Date(),
+    endDate: new Date(),
+  },
+  {
+    id: 3,
+    name: "period3",
+    startDate: new Date(),
+    endDate: new Date(),
+  },
+];
 
 const Dashboard = () => {
-  const [periods, setPeriods] = useState(null);
+  const [reportData, setReportData] = useState(null);
+  const navigate = useNavigate();
   // Data for profit/loss chart
   const profitData = [
     { name: "Periode 1", value: 20000000 },
@@ -59,31 +82,18 @@ const Dashboard = () => {
     profitMargin: "35.36%",
   };
 
-  const periodData = [
-    {
-      id: 1,
-      name: "period1",
-      startDate: new Date(),
-      endDate: new Date(),
-    },
-    {
-      id: 2,
-      name: "period2",
-      startDate: new Date(),
-      endDate: new Date(),
-    },
-    {
-      id: 3,
-      name: "period3",
-      startDate: new Date(),
-      endDate: new Date(),
-    },
-  ];
+  const [periods, setPeriods] = useState([]);
+  const [currentPeriod, setCurrentPeriod] = useState(null);
 
   const getUserPeriod = async () => {
-    const data = await getPeriod();
-
-    setPeriods(data);
+    try {
+      const data = await getPeriod();
+      console.log(data)
+      setPeriods(data);
+    } catch (error) {
+      console.log("error bang")
+      navigate("/login");
+    }
   };
 
   useEffect(() => {
@@ -125,12 +135,16 @@ const Dashboard = () => {
         </div>
 
         {/* Current Period */}
-        <div className="mb-6">
-          <h2 className="text-xl font-bold mb-6 px-10 ">Periode Saat Ini</h2>
+        <div className="mb-6 px-10">
+          <h2 className="text-xl font-bold mb-4 ">Periode Saat Ini</h2>
 
           {/* Wrapper dengan relative untuk dropdown */}
 
-          <PeriodDropdown periodData={periodData} />
+          <PeriodDropdown
+            periodData={periods}
+            currentPeriod={currentPeriod}
+            setCurrentPeriod={setCurrentPeriod}
+          />
         </div>
 
         {/* Charts Section */}

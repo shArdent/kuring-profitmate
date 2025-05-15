@@ -2,9 +2,8 @@ import { format } from "date-fns";
 import { id } from "date-fns/locale";
 import { useState } from "react";
 
-const PeriodDropdown = ({ periodData }) => {
+const PeriodDropdown = ({ periodData, currentPeriod, setCurrentPeriod }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [currentPeriod, setCurrentPeriod] = useState(null);
 
   const handlePeriodChange = (period) => {
     setCurrentPeriod(period);
@@ -13,7 +12,7 @@ const PeriodDropdown = ({ periodData }) => {
   };
 
   return (
-    <div className="relative px-10 mt-6 w-full">
+    <div className="relative  w-full">
       {/* Box biru sebagai trigger */}
       <div
         onClick={() => setIsDropdownOpen(!isDropdownOpen)}
@@ -24,7 +23,6 @@ const PeriodDropdown = ({ periodData }) => {
             <>
               <h3 className="text-lg font-semibold">{currentPeriod.name}</h3>
               <p>
-                Pilih periode
                 {format(currentPeriod.startDate, "MMM yyy", {
                   locale: id,
                 })}{" "}
@@ -58,17 +56,19 @@ const PeriodDropdown = ({ periodData }) => {
       {isDropdownOpen && (
         <div className="absolute top-full left-0 right-0 bg-white text-gray-800 rounded-b-lg shadow-lg z-10">
           <ul>
-            {periodData.map((period, index) => (
-              <li
-                key={index}
-                className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
-                onClick={() => handlePeriodChange(period)}
-              >
-                {period.name}:{" "}
-                {format(period.startDate, "MMM yyy", { locale: id })} -{" "}
-                {format(period.startDate, "MMM yyy", { locale: id })}
-              </li>
-            ))}
+            {periodData
+              ? periodData?.map((period, index) => (
+                  <li
+                    key={index}
+                    className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                    onClick={() => handlePeriodChange(period)}
+                  >
+                    {period.name}:{" "}
+                    {format(period.startDate, "MMM yyy", { locale: id })} -{" "}
+                    {format(period.startDate, "MMM yyy", { locale: id })}
+                  </li>
+                ))
+              : null}
           </ul>
         </div>
       )}

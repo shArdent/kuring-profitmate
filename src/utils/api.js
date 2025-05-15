@@ -17,9 +17,37 @@ export const logout = async () => {
 };
 
 export const getPeriod = async () => {
+  try {
+    const {
+      data: { data },
+    } = await apiClient.get("/period");
+
+    return data;
+  } catch (error) {
+    return error;
+  }
+};
+
+export const getReport = async (periodId) => {
   const {
     data: { data },
-  } = await apiClient.get("/period");
+  } = await apiClient.get(`/report/${periodId}`);
+
+  return data;
+};
+
+export const postTransaction = async (trxData) => {
+  const {
+    data: { data },
+  } = await apiClient.post("/transaction", trxData);
+
+  return data;
+};
+
+export const getTransactions = async (periodId) => {
+  const {
+    data: { data },
+  } = await apiClient.get(`/transaction/a/${periodId}`);
 
   return data;
 };

@@ -1,13 +1,14 @@
-import React, { useState, useRef, useEffect } from 'react';
-import PropTypes from 'prop-types';
+import React, { useState, useRef, useEffect } from "react";
+import PropTypes from "prop-types";
 
-const Dropdown = ({ 
-  label, 
-  options, 
-  value, 
-  onChange, 
-  placeholder = 'Pilih opsi...',
-  name
+const Dropdown = ({
+  label,
+  options,
+  value,
+  onChange,
+  placeholder = "Pilih opsi...",
+  name,
+  displayText,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef(null);
@@ -20,9 +21,9 @@ const Dropdown = ({
       }
     };
 
-    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
 
@@ -30,10 +31,6 @@ const Dropdown = ({
     onChange(option);
     setIsOpen(false);
   };
-
-  // Find the selected option's label to display
-  const selectedOption = options.find(option => option.value === value);
-  const displayText = selectedOption ? selectedOption.label : placeholder;
 
   return (
     <div className="w-full">
@@ -51,11 +48,11 @@ const Dropdown = ({
           aria-expanded={isOpen}
           name={name}
         >
-          <span className={`block truncate ${!selectedOption ? 'text-gray-500' : ''}`}>
-            {displayText}
-          </span>
+          <span className={`block truncate`}>{displayText}</span>
           <svg
-            className={`w-5 h-5 text-gray-400 transition-transform ${isOpen ? 'transform rotate-180' : ''}`}
+            className={`w-5 h-5 text-gray-400 transition-transform ${
+              isOpen ? "transform rotate-180" : ""
+            }`}
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 20 20"
             fill="currentColor"
@@ -67,30 +64,36 @@ const Dropdown = ({
             />
           </svg>
         </button>
-        
+
         {isOpen && (
           <div className="absolute mt-1 w-full rounded-md bg-white shadow-lg z-10 max-h-60 overflow-auto">
-            <ul
-              className="py-1"
-              role="listbox"
-            >
+            <ul className="py-1" role="listbox">
               {options.map((option) => (
                 <li
                   key={option.value}
                   className={`cursor-pointer select-none relative py-2 pl-3 pr-9 hover:bg-orange-100 ${
-                    value === option.value ? 'bg-orange-50 text-orange-700' : 'text-gray-900'
+                    value === option.value
+                      ? "bg-orange-50 text-orange-700"
+                      : "text-gray-900"
                   }`}
                   onClick={() => handleSelect(option)}
                   role="option"
                   aria-selected={value === option.value}
                 >
-                  <span className="block truncate">
-                    {option.label}
-                  </span>
+                  <span className="block truncate">{option.label}</span>
                   {value === option.value && (
                     <span className="absolute inset-y-0 right-0 flex items-center pr-4 text-orange-600">
-                      <svg className="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                      <svg
+                        className="h-5 w-5"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 20 20"
+                        fill="currentColor"
+                      >
+                        <path
+                          fillRule="evenodd"
+                          d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                          clipRule="evenodd"
+                        />
                       </svg>
                     </span>
                   )}
@@ -108,14 +111,15 @@ Dropdown.propTypes = {
   label: PropTypes.string,
   options: PropTypes.arrayOf(
     PropTypes.shape({
-      value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
-      label: PropTypes.string.isRequired
+      value: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
+        .isRequired,
+      label: PropTypes.string.isRequired,
     })
   ).isRequired,
   value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   onChange: PropTypes.func.isRequired,
   placeholder: PropTypes.string,
-  name: PropTypes.string
+  name: PropTypes.string,
 };
 
 export default Dropdown;
