@@ -1,68 +1,33 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
 const PricingCalculator = () => {
-  const [hppData, setHPPData] = useState(null);
   const [productCount, setProductCount] = useState("");
   const [initialInventory, setInitialInventory] = useState("");
   const [finalInventory, setFinalInventory] = useState("");
   const [marginProfit, setMarginProfit] = useState("50%");
-  const [tableData, setTableData] = useState([
-    {
-      tanggal: "Jan 1, 2024",
-      jumlahProduk: "2.500",
-      marginKeuntungan: "75%",
-      persediaanAwal: "Rp. 0",
-      persediaanAkhir: "Rp. 96.428.571",
-      hargaPokokPenjualan: "Rp. 64.285.725",
-    },
-    {
-      tanggal: "Feb 1, 2024",
-      jumlahProduk: "1000",
-      marginKeuntungan: "75%",
-      persediaanAwal: "Rp. 51.428.571",
-      persediaanAkhir: "Rp. 34.285.714",
-      hargaPokokPenjualan: "Rp. 51.428.571",
-    },
-    {
-      tanggal: "Mar 1, 2024",
-      jumlahProduk: "1.500",
-      marginKeuntungan: "75%",
-      persediaanAwal: "Rp. 34.285.714",
-      persediaanAkhir: "Rp. 6.435.643",
-      hargaPokokPenjualan: "Rp. 25.741.286",
-    },
-    {
-      tanggal: "Apr 1, 2024",
-      jumlahProduk: "2.000",
-      marginKeuntungan: "75%",
-      persediaanAwal: "Rp. 6.435.643",
-      persediaanAkhir: "Rp. 0",
-      hargaPokokPenjualan: "Rp. 38.751.435",
-    },
-    {
-      tanggal: "Mei 1, 2024",
-      jumlahProduk: "2.500",
-      marginKeuntungan: "75%",
-      persediaanAwal: "Rp. 0",
-      persediaanAkhir: "Rp. 0",
-      hargaPokokPenjualan: "Rp. 51.428.571",
-    },
-    {
-      tanggal: "Jun 1, 2024",
-      jumlahProduk: "3.000",
-      marginKeuntungan: "75%",
-      persediaanAwal: "Rp. 0",
-      persediaanAkhir: "Rp. 5.510.204",
-      hargaPokokPenjualan: "Rp. 77.142.870",
-    },
-  ]);
+  const [hpp, setHPP] = useState(null);
 
   const handleCalculate = () => {
-    // Calculation logic would go here
-    console.log("Calculating...");
-  };
+    const jumlahProduk = parseFloat(productCount);
+    const persAwal = parseFloat(initialInventory);
+    const persAkhir = parseFloat(finalInventory);
+    const margin = parseFloat(marginProfit) / 100;
 
-  useEffect(() => {}, []);
+    if (isNaN(jumlahProduk) || isNaN(persAwal) || isNaN(persAkhir)) {
+      alert("Mohon isi semua field dengan angka yang valid.");
+      return;
+    }
+
+    const hppPenjualan = persAwal - persAkhir;
+    const hppPerProduk = hppPenjualan / jumlahProduk;
+    const hargaJual = hppPerProduk * (1 + margin);
+
+    setHPP({
+      hppPenjualan,
+      hppPerProduk,
+      hargaJual,
+    });
+  };
 
   return (
     <>
@@ -164,35 +129,31 @@ const PricingCalculator = () => {
         </button>
       </div>
 
-      <div>
-        <h2 className="text-xl font-bold mb-4 px-10">Harga Pokok Penjualan</h2>
-        <div className="overflow-x-auto px-10 mt-8">
-          <table className="w-full border-collapse">
-            <thead>
-              <tr className="border border-gray-200 bg-gray-50">
-                <th className="p-3 text-center">Tanggal</th>
-                <th className="p-3 text-center">Jumlah Produk</th>
-                <th className="p-3 text-center">Margin Keuntungan</th>
-                <th className="p-3 text-center">Persediaan Awal</th>
-                <th className="p-3 text-center">Persediaan Akhir</th>
-                <th className="p-3 text-center">Harga Pokok Penjualan</th>
-              </tr>
-            </thead>
-            <tbody>
-              {tableData.map((row, index) => (
-                <tr key={index} className="border border-gray-200">
-                  <td className="p-3 text-center">{row.tanggal}</td>
-                  <td className="p-3 text-center">{row.jumlahProduk}</td>
-                  <td className="p-3 text-center">{row.marginKeuntungan}</td>
-                  <td className="p-3 text-center">{row.persediaanAwal}</td>
-                  <td className="p-3 text-center">{row.persediaanAkhir}</td>
-                  <td className="p-3 text-center">{row.hargaPokokPenjualan}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+      {hpp && (
+        <div className="px-10 mb-10">
+          <h2 className="text-xl font-bold mb-4">Hasil Perhitungan</h2>
+          <div className="grid md:grid-cols-3 gap-6">
+            <div className="bg-blue-100 rounded-lg p-4 shadow">
+              <p className="font-semibold">Harga Pokok Penjualan</p>
+              <p className="text-lg font-bold text-blue-800">
+                Rp. {hpp.hppPenjualan.toLocaleString("id-ID")}
+              </p>
+            </div>
+            <div className="bg-blue-100 rounded-lg p-4 shadow">
+              <p className="font-semibold">HPP per Produk</p>
+              <p className="text-lg font-bold text-blue-800">
+                Rp. {hpp.hppPerProduk.toLocaleString("id-ID")}
+              </p>
+            </div>
+            <div className="bg-blue-100 rounded-lg p-4 shadow">
+              <p className="font-semibold">Harga Jual</p>
+              <p className="text-lg font-bold text-blue-800">
+                Rp. {hpp.hargaJual.toLocaleString("id-ID")}
+              </p>
+            </div>
+          </div>
         </div>
-      </div>
+      )}
     </>
   );
 };

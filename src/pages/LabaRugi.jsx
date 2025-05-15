@@ -200,69 +200,70 @@ const LabaRugi = () => {
                 },
               ],
             }}
+            options={{
+              responsive: true,
+              maintainAspectRatio: false,
+            }}
           />
         </div>
+      </div>
 
-        {/* Ringkasan */}
-        <div className="grid grid-cols-3 gap-4 px-10 mb-8">
-          <SummaryBox
-            label="Laba Operasional"
-            value={report ? report.labaOperasional : 0}
-          />
-          <SummaryBox
-            label="Laba Kotor"
-            value={report ? report.labaKotor : 0}
-          />
-          <SummaryBox
-            label="Laba Bersih"
-            value={report ? report.labaBersih : 0}
-          />
-        </div>
+      {/* Ringkasan */}
+      <div className="grid grid-cols-3 gap-4 px-10 mb-8">
+        <SummaryBox
+          label="Laba Operasional"
+          value={report ? report.labaOperasional : 0}
+        />
+        <SummaryBox label="Laba Kotor" value={report ? report.labaKotor : 0} />
+        <SummaryBox
+          label="Laba Bersih"
+          value={report ? report.labaBersih : 0}
+        />
+      </div>
 
-        {/* Kartu Detail */}
-        <div className="grid grid-cols-2 gap-6 px-10">
-          <Card
-            title="Pendapatan"
-            items={report ? report.pendapatan.data : []}
-            total={report ? report.pendapatan.total : 0}
-            totalColor="text-green-600"
-          />
-          <Card
-            title="Beban Operasional"
-            items={report ? report.bebanOperasional.data : []}
-            total={report ? report.bebanOperasional.total : 0}
-            totalColor="text-red-600"
-          />
-          <Card
-            title="Harga Pokok Penjualan (HPPn)"
-            items={
-              report
-                ? [
-                    {
-                      name: "Persediaan Awal",
-                      amount: report.hargaPokokPenjualan.persediaanAwal,
-                    },
-                    {
-                      name: "Harga Pokok Produksi",
-                      amount: report.hargaPokokPenjualan.hargaPokokProduksi,
-                    },
-                    {
-                      name: "Persediaan Akhir",
-                      amount: report.hargaPokokPenjualan.persediaanAkhir,
-                    },
-                  ]
-                : []
-            }
-            total={report ? report.hargaPokokPenjualan.total : 0}
-            totalColor="text-red-600"
-          />
-          <Card
-            title="Beban Lain-lain & Pajak"
-            items={report ? report.bebanLain.data : []}
-            total={report ? report.bebanLain.total : 0}
-            totalColor="text-red-600"
-          />
-        </div>
+      {/* Kartu Detail */}
+      <div className="grid grid-cols-2 gap-6 px-10">
+        <Card
+          title="Pendapatan"
+          items={report ? report.pendapatan.data : []}
+          total={report ? report.pendapatan.total : 0}
+          totalColor="text-green-600"
+        />
+        <Card
+          title="Beban Operasional"
+          items={report ? report.bebanOperasional.data : []}
+          total={report ? report.bebanOperasional.total : 0}
+          totalColor="text-red-600"
+        />
+        <Card
+          title="Harga Pokok Penjualan (HPPn)"
+          items={
+            report
+              ? [
+                  {
+                    name: "Persediaan Awal",
+                    amount: report.hargaPokokPenjualan.persediaanAwal,
+                  },
+                  {
+                    name: "Harga Pokok Produksi",
+                    amount: report.hargaPokokPenjualan.hargaPokokProduksi,
+                  },
+                  {
+                    name: "Persediaan Akhir",
+                    amount: report.hargaPokokPenjualan.persediaanAkhir,
+                  },
+                ]
+              : []
+          }
+          total={report ? report.hargaPokokPenjualan.total : 0}
+          totalColor="text-red-600"
+        />
+        <Card
+          title="Beban Lain-lain & Pajak"
+          items={report ? report.bebanLain.data : []}
+          total={report ? report.bebanLain.total : 0}
+          totalColor="text-red-600"
+        />
       </div>
     </div>
   );

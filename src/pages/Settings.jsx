@@ -98,7 +98,7 @@ const Settings = () => {
           />
           
           <div className="mt-6">
-            <Button type="submit" variant="primary">
+            <Button type="submit" variant="primary" >
               Simpan
             </Button>
           </div>

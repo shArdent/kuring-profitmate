@@ -1,6 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { logout } from "../../utils/api";
+import chartIcon from '../../assets/images/chart-icon.png';
 
 const Sidebar = () => {
   const navigate = useNavigate();
@@ -13,23 +14,25 @@ const Sidebar = () => {
   };
 
   return (
-    <div className="w-56 bg-[#789DBC] text-white flex flex-col min-h-screen">
-      <div className="p-4 flex items-center gap-2">
-        <div className="bg-white p-1 rounded">
-          <img
-            src="/assets/images/chart-icon.png"
-            alt="ProfiteMate"
-            className="w-6 h-6"
-          />
-        </div>
-        <h1 className="font-bold text-lg">ProfiteMate</h1>
-      </div>
+    <div className="w-56 bg-[#789DBC] text-white flex flex-col justify-center min-h-screen ">
+      <div className="p-4 flex items-center gap-1 mt-6 pl-6">
+  <div className=" p-1 rounded">
+    <img
+      src={chartIcon} // Gunakan import
+      alt="ProfiteMate"
+      className="w-10 h-10 object-contain"
+    />
+  </div>
+  <h1 className="font-bold text-lg text-white">ProfiteMate</h1>
+</div>
 
-      <nav className="mt-8 flex-1">
+
+    <div className="justify-center">
+      <nav className="mr-5 flex items-center justify-center gap-2 ">
         <ul>
           <li
             onClick={() => navigate("/dashboard")}
-            className="py-3 px-4 flex items-center gap-2 hover:bg-blue-500 cursor-pointer"
+            className="py-5 px-4 flex items-center gap-2 hover:bg-blue-500 cursor-pointer"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -43,7 +46,7 @@ const Sidebar = () => {
           </li>
           <li
             onClick={() => navigate("/labarugi")}
-            className="py-3 px-4 flex items-center gap-2 hover:bg-blue-500 cursor-pointer"
+            className="py-5 px-4 flex items-center gap-2 hover:bg-blue-500 cursor-pointer"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -62,7 +65,7 @@ const Sidebar = () => {
           </li>
           <li
             onClick={() => navigate("/hpp")}
-            className="py-3 px-4 flex items-center gap-2 hover:bg-blue-500 cursor-pointer"
+            className="py-5 px-4 flex items-center gap-2 hover:bg-blue-500 cursor-pointer"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -80,7 +83,7 @@ const Sidebar = () => {
           </li>
           <li
             onClick={() => navigate("/hppn")}
-            className="py-3 px-4 flex items-center gap-2 hover:bg-blue-500 cursor-pointer"
+            className="py-5 px-4 flex items-center gap-2 hover:bg-blue-500 cursor-pointer"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -98,7 +101,7 @@ const Sidebar = () => {
           </li>
           <li
             onClick={() => navigate("/transactions")}
-            className="py-3 px-4 flex items-center gap-2 hover:bg-blue-500 cursor-pointer"
+            className="py-5 px-4 flex items-center gap-2 hover:bg-blue-500 cursor-pointer"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -116,7 +119,7 @@ const Sidebar = () => {
           </li>
           <li
             onClick={() => navigate("/settings")}
-            className="py-3 px-4 flex items-center gap-2 hover:bg-blue-500 cursor-pointer"
+            className="py-5 px-4 flex items-center gap-2 hover:bg-blue-500 cursor-pointer"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -134,11 +137,12 @@ const Sidebar = () => {
           </li>
         </ul>
       </nav>
+    </div>
 
-      <div className="p-4 mt-auto">
+      <div className="p-4 ml-8 mb-4 mt-auto w-[150px]">
         <button
           onClick={handleLogout}
-          className="bg-orange-400 text-white py-2 px-4 rounded w-full hover:bg-orange-500 transition-colors"
+          className="bg-orange-400 text-white py-2 px-4 rounded w-full rounded-full hover:bg-orange-500 transition-colors"
         >
           Logout
         </button>

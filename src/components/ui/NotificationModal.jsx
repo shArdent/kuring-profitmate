@@ -41,7 +41,7 @@ const NotificationModal = ({ message, onClose, type = 'success' }) => {
         <h3 className="text-lg font-medium text-center mb-4">{message}</h3>
         <button 
           onClick={onClose}
-          className="bg-orange-500 hover:bg-orange-600 text-white py-2 px-4 rounded-md w-full"
+          className="bg-orange-500 hover:bg-orange-600 text-white py-2 px-4 rounded-md w-[100px] mt-4"
         >
           OK
         </button>
