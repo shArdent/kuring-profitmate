@@ -2,6 +2,28 @@ import { format } from "date-fns";
 import { id } from "date-fns/locale";
 import { useEffect, useState } from "react";
 import { getPeriod } from "../../utils/api";
+import toast from "react-hot-toast";
+
+const periodData = [
+  {
+    id: 1,
+    name: "period1",
+    startDate: new Date(),
+    endDate: new Date(),
+  },
+  {
+    id: 2,
+    name: "period2",
+    startDate: new Date(),
+    endDate: new Date(),
+  },
+  {
+    id: 3,
+    name: "period3",
+    startDate: new Date(),
+    endDate: new Date(),
+  },
+];
 
 const PeriodDropdown = ({ currentPeriod, setCurrentPeriod }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -17,10 +39,17 @@ const PeriodDropdown = ({ currentPeriod, setCurrentPeriod }) => {
   const getUserPeriod = async () => {
     try {
       const data = await getPeriod();
+
       setPeriods(data);
     } catch (error) {
+      setPeriods(periodData);
       console.log("error bang");
-      navigate("/login");
+      if (error.status === 401) {
+        navigate("/login");
+      }
+      if (error.status === 404) {
+        toast.error("Data periode tidak ditemukan");
+      }
     }
   };
 
