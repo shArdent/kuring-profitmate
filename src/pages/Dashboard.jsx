@@ -82,7 +82,23 @@ const Dashboard = () => {
     profitMargin: "35.36%",
   };
 
+  const [periods, setPeriods] = useState([]);
   const [currentPeriod, setCurrentPeriod] = useState(null);
+
+  const getUserPeriod = async () => {
+    try {
+      const data = await getPeriod();
+      console.log(data)
+      setPeriods(data);
+    } catch (error) {
+      console.log("error bang")
+      // navigate("/login");
+    }
+  };
+
+  useEffect(() => {
+    getUserPeriod();
+  }, []);
 
   return (
     <DashboardLayout title="Dashboard">
@@ -125,6 +141,7 @@ const Dashboard = () => {
           {/* Wrapper dengan relative untuk dropdown */}
 
           <PeriodDropdown
+            periodData={periods}
             currentPeriod={currentPeriod}
             setCurrentPeriod={setCurrentPeriod}
           />

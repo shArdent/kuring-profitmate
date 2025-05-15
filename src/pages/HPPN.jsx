@@ -40,7 +40,9 @@ const HPPN = () => {
         
         <div className="mb-6">
           <h2 className="text-lg font-medium px-10">Periode Saat Ini</h2>
-          <PeriodDropdown periodData={periodData} />
+          <div className="w full max-w- px-10">
+            <PeriodDropdown periodData={periodData} />
+          </div>
         </div>
 
         {/* Using the existing PricingCalculator component */}
