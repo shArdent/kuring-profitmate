@@ -46,7 +46,7 @@ const PeriodDropdown = ({ currentPeriod, setCurrentPeriod }) => {
       setPeriods(periodData);
       console.log("error bang");
       if (error.status === 401) {
-        // navigate("/login");
+        navigate("/login");
       }
       if (error.status === 404) {
         toast.error("Data periode tidak ditemukan");

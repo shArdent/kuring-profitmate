@@ -27,7 +27,7 @@ export const getPeriod = async () => {
 export const getReport = async (periodId) => {
   const {
     data: { data },
-  } = await apiClient.get(`/report/${periodId}`);
+  } = await apiClient.get(`/report/a/${periodId}`);
 
   return data;
 };

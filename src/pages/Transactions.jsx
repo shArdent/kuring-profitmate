@@ -9,6 +9,7 @@ import { useNavigate } from "react-router-dom";
 import { getPeriod, getTransactions, postTransaction } from "../utils/api";
 import { format, parseISO } from "date-fns";
 import { id } from "date-fns/locale";
+import { formatCurrency } from "../utils/formatter";
 
 const periodData = [
   {
@@ -216,7 +217,7 @@ const Transactions = () => {
       width: "20%",
       render: (row) => {
         // Format number with comma as thousands separator
-        return `Rp ${row.amount.toLocaleString("id-ID")}`;
+        return `Rp ${formatCurrency(row.amount)}`;
       },
     },
   ];

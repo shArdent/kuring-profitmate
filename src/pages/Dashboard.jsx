@@ -12,33 +12,12 @@ import { PieChart, Pie, Cell, Tooltip as PieTooltip } from "recharts";
 import { BarChart, Bar, Legend } from "recharts";
 import DashboardLayout from "../layouts/DashboardLayout";
 import DashboardCards from "../components/features/dashboard/DashboardCards";
-import { getPeriod } from "../utils/api";
 import PeriodDropdown from "../components/common/PeriodDropdown";
 import { useNavigate } from "react-router-dom";
-
-const periodData = [
-  {
-    id: 1,
-    name: "period1",
-    startDate: new Date(),
-    endDate: new Date(),
-  },
-  {
-    id: 2,
-    name: "period2",
-    startDate: new Date(),
-    endDate: new Date(),
-  },
-  {
-    id: 3,
-    name: "period3",
-    startDate: new Date(),
-    endDate: new Date(),
-  },
-];
+import toast from "react-hot-toast";
+import apiClient from "../utils/axios";
 
 const Dashboard = () => {
-  const [reportData, setReportData] = useState(null);
   const navigate = useNavigate();
   // Data for profit/loss chart
   const profitData = [
@@ -83,6 +62,48 @@ const Dashboard = () => {
   };
 
   const [currentPeriod, setCurrentPeriod] = useState(null);
+  const [dataLabaBersih, setDataLabaBersih] = useState(null);
+  const [report, setReport] = useState(null);
+
+  const handleGetLabaBersih = async () => {
+    try {
+      const {
+        data: { data },
+      } = await apiClient.get("/report/laba-bersih");
+      setDataLabaBersih(data);
+    } catch (error) {
+      toast.error("Gagal mendapatkan data laba bersih");
+    }
+  };
+
+  const handleGetReport = async () => {
+    try {
+      const {
+        data: { data },
+      } = await apiClient.get(`/report/a/${currentPeriod.id}`);
+
+      setReport(data);
+    } catch (error) {
+      console.log(error);
+      toast.error("Data tidak ditemukan");
+    }
+  };
+
+  useEffect(() => {
+    handleGetLabaBersih();
+  }, []);
+
+  useEffect(() => {
+    if (currentPeriod) {
+      handleGetReport();
+    }
+  }, [currentPeriod]);
+
+  useEffect(() => {
+    if (report) {
+      console.log(report.transactionGroup);
+    }
+  }, [report]);
 
   return (
     <DashboardLayout title="Dashboard">
@@ -91,24 +112,22 @@ const Dashboard = () => {
           Laba Rugi Antar Periode
         </h1>
         <div className="p-4"></div>
-        {/* Dashboard cards component */}
-        <DashboardCards data={summaryData} />
 
         {/* Profit/Loss Chart */}
         <div className="px-10">
           <div className="bg-white p-4 rounded-lg shadow mb-16 ">
             <ResponsiveContainer width="100%" height={300}>
               <LineChart
-                data={profitData}
+                data={dataLabaBersih}
                 margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
               >
                 <CartesianGrid strokeDasharray="3 3" vertical={false} />
-                <XAxis dataKey="name" />
+                <XAxis dataKey="periodName" />
                 <YAxis />
                 <Tooltip />
                 <Line
                   type="monotone"
-                  dataKey="value"
+                  dataKey="labaBersih"
                   stroke="#8884d8"
                   activeDot={{ r: 8 }}
                   name="Laba Bersih"
@@ -135,46 +154,50 @@ const Dashboard = () => {
           {/* Expense Ratio */}
           <div className="bg-white p-4 rounded-lg shadow">
             <h2 className="text-xl font-bold mb-4">Rasio Pengeluaran</h2>
-            <div className="flex items-center">
-              <div className="w-1/2">
-                <ResponsiveContainer width="100%" height={200}>
-                  <PieChart>
-                    <Pie
-                      data={expenseData}
-                      cx="50%"
-                      cy="50%"
-                      innerRadius={0}
-                      outerRadius={80}
-                      fill="#8884d8"
-                      dataKey="value"
-                      label={false}
-                    >
-                      {expenseData.map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={entry.color} />
-                      ))}
-                    </Pie>
-                    <PieTooltip />
-                  </PieChart>
-                </ResponsiveContainer>
-              </div>
-              <div className="w-1/2">
-                {expenseData.map((item, index) => (
-                  <div key={index} className="mb-2">
-                    <div className="flex items-center mb-1">
-                      <div
-                        className="w-3 h-3 rounded-full mr-2"
-                        style={{ backgroundColor: item.color }}
-                      ></div>
-                      <span className="text-sm">{item.name}</span>
+            {report ? (
+              <div className="flex items-center">
+                <div className="w-1/2">
+                  <ResponsiveContainer width="100%" height={200}>
+                    <PieChart>
+                      <Pie
+                        data={report.expenseData}
+                        cx="50%"
+                        cy="50%"
+                        innerRadius={0}
+                        outerRadius={80}
+                        fill="#8884d8"
+                        dataKey="value"
+                        label={false}
+                      >
+                        {report.expenseData.map((entry, index) => (
+                          <Cell key={`cell-${index}`} fill={entry.color} />
+                        ))}
+                      </Pie>
+                      <PieTooltip />
+                    </PieChart>
+                  </ResponsiveContainer>
+                </div>
+                <div className="w-1/2">
+                  {report.expenseData.map((item, index) => (
+                    <div key={index} className="mb-2">
+                      <div className="flex items-center mb-1">
+                        <div
+                          className="w-3 h-3 rounded-full mr-2"
+                          style={{ backgroundColor: item.color }}
+                        ></div>
+                        <span className="text-sm">{item.name}</span>
+                      </div>
+                      <div className="text-sm text-gray-600">
+                        Rp. {new Intl.NumberFormat("id-ID").format(item.value)}{" "}
+                        ({item.percentage})
+                      </div>
                     </div>
-                    <div className="text-sm text-gray-600">
-                      {new Intl.NumberFormat("id-ID").format(item.value)} (
-                      {item.percentage})
-                    </div>
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
-            </div>
+            ) : (
+              <h1 className="text-center pt-10">Tidak ada data</h1>
+            )}
           </div>
 
           {/* Income & Expense Ratio */}
@@ -182,17 +205,21 @@ const Dashboard = () => {
             <h2 className="text-xl font-bold mb-4">
               Rasio Pendapatan & Pengeluaran
             </h2>
-            <ResponsiveContainer width="100%" height={300}>
-              <BarChart data={comparisonData}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="name" />
-                <YAxis />
-                <Tooltip />
-                <Legend />
-                <Bar dataKey="Pendapatan" fill="#8884d8" />
-                <Bar dataKey="Pengeluaran" fill="#f87d8e" />
-              </BarChart>
-            </ResponsiveContainer>
+            {report ? (
+              <ResponsiveContainer width="100%" height={300}>
+                <BarChart data={report.transactionGroup}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="name" />
+                  <YAxis />
+                  <Tooltip />
+                  <Legend />
+                  <Bar dataKey="pendapatan" fill="#8884d8" />
+                  <Bar dataKey="pengeluaran" fill="#f87d8e" />
+                </BarChart>
+              </ResponsiveContainer>
+            ) : (
+              <h1 className="text-center pt-10">Tidak ada data</h1>
+            )}
           </div>
         </div>
       </div>
