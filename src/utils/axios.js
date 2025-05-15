@@ -55,7 +55,10 @@ apiClient.interceptors.response.use(
       isRefreshing = true;
 
       try {
-        const { data } = await axios.post("http://localhost:3000/auth/refresh");
+        const {
+          data: { data },
+        } = await apiClient.post("/auth/refresh");
+        console.log(data);
         const newAccessToken = data.accessToken;
 
         localStorage.setItem("accessToken", newAccessToken);
@@ -65,6 +68,7 @@ apiClient.interceptors.response.use(
 
         return apiClient(originalRequest);
       } catch (err) {
+        console.log(err);
         processQueue(err, null);
         return Promise.reject(err);
       } finally {

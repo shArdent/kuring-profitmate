@@ -8,6 +8,8 @@ import Card from "../components/ui/Card";
 import SummaryBox from "../components/ui/SummaryBox";
 import { getPeriod } from "../utils/api";
 import { useNavigate } from "react-router-dom";
+import apiClient from "../utils/axios";
+import toast from "react-hot-toast";
 
 const LabaRugi = () => {
   // Data Periode
@@ -130,22 +132,27 @@ const LabaRugi = () => {
     { key: "hppn", header: "HPPn", width: "15%" },
     { key: "labaRugi", header: "Laba/Rugi", width: "20%" },
   ];
-  const navigate = useNavigate();
-  const [periods, setPeriods] = useState(periodData);
   const [currentPeriod, setCurrentPeriod] = useState(null);
+  const [report, setReport] = useState(null);
 
-  const getUserPeriod = async () => {
+  const handleGetReport = async () => {
     try {
-      const data = await getPeriod();
-      setPeriods(data);
+      const {
+        data: { data },
+      } = await apiClient.get(`/report/${currentPeriod.id}`);
+
+      console.log(data);
+      setReport(data);
     } catch (error) {
-      navigate("/login");
+      toast.error("Data tidak ditemukan");
     }
   };
 
   useEffect(() => {
-    getUserPeriod();
-  }, []);
+    if (currentPeriod) {
+      handleGetReport();
+    }
+  }, [currentPeriod]);
 
   return (
     <div className="flex min-h-screen">
@@ -156,7 +163,6 @@ const LabaRugi = () => {
         {/* Period Picker */}
         <div className="mb-8">
           <PeriodDropdown
-            periodData={periods}
             currentPeriod={currentPeriod}
             setCurrentPeriod={setCurrentPeriod}
           />
@@ -199,43 +205,61 @@ const LabaRugi = () => {
 
         {/* Ringkasan */}
         <div className="grid grid-cols-3 gap-4 px-10 mb-8">
-          <SummaryBox label="Laba Operasional" value={9220000} />
-          <SummaryBox label="Laba Kotor" value={16820000} />
-          <SummaryBox label="Laba Bersih" value={8298000} />
+          <SummaryBox
+            label="Laba Operasional"
+            value={report ? report.labaOperasional : 0}
+          />
+          <SummaryBox
+            label="Laba Kotor"
+            value={report ? report.labaKotor : 0}
+          />
+          <SummaryBox
+            label="Laba Bersih"
+            value={report ? report.labaBersih : 0}
+          />
         </div>
 
         {/* Kartu Detail */}
         <div className="grid grid-cols-2 gap-6 px-10">
           <Card
             title="Pendapatan"
-            items={[{ label: "Penjualan Produk", value: 22620000 }]}
-            total={22620000}
+            items={report ? report.pendapatan.data : []}
+            total={report ? report.pendapatan.total : 0}
             totalColor="text-green-600"
           />
           <Card
             title="Beban Operasional"
-            items={[
-              { label: "Sewa Pabrik", value: 3800000 },
-              { label: "Penyusutan Mesin", value: 1800000 },
-              { label: "Gaji Karyawan", value: 2000000 },
-            ]}
-            total={7600000}
+            items={report ? report.bebanOperasional.data : []}
+            total={report ? report.bebanOperasional.total : 0}
             totalColor="text-red-600"
           />
           <Card
             title="Harga Pokok Penjualan (HPPn)"
-            items={[
-              { label: "Persediaan Awal", value: 800000 },
-              { label: "Harga Pokok Produksi", value: 5800000 },
-              { label: "Persediaan Akhir", value: 800000 },
-            ]}
-            total={5800000}
+            items={
+              report
+                ? [
+                    {
+                      name: "Persediaan Awal",
+                      amount: report.hargaPokokPenjualan.persediaanAwal,
+                    },
+                    {
+                      name: "Harga Pokok Produksi",
+                      amount: report.hargaPokokPenjualan.hargaPokokProduksi,
+                    },
+                    {
+                      name: "Persediaan Akhir",
+                      amount: report.hargaPokokPenjualan.persediaanAkhir,
+                    },
+                  ]
+                : []
+            }
+            total={report ? report.hargaPokokPenjualan.total : 0}
             totalColor="text-red-600"
           />
           <Card
             title="Beban Lain-lain & Pajak"
-            items={[{ label: "Pajak", value: 992000 }]}
-            total={992000}
+            items={report ? report.bebanLain.data : []}
+            total={report ? report.bebanLain.total : 0}
             totalColor="text-red-600"
           />
         </div>

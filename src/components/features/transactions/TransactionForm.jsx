@@ -24,7 +24,7 @@ const TransactionForm = ({
     name: "",
     date: getCurrentDate(),
     amount: "",
-    type: "Pemasukan",
+    type: "",
     periodId: currentPeriod?.id,
   });
 
@@ -54,7 +54,6 @@ const TransactionForm = ({
       ...formData,
       [name]: value,
     });
-
     if (errors[name]) {
       setErrors({
         ...errors,
@@ -106,6 +105,23 @@ const TransactionForm = ({
     }
   };
 
+  const [displayText, setDisplayText] = useState("Pilih TIpe");
+
+  const handleDisplayText = () => {
+    if (formData.type === "EXPENSE") {
+      return transactionTypeOptions[1].label;
+    } else if (formData.type === "INCOME") {
+      return transactionTypeOptions[0].label;
+    }
+    return "Pilih tipe transaksi";
+  };
+
+  useEffect(() => {
+    const text = handleDisplayText();
+
+    setDisplayText(text);
+  }, [formData]);
+
   return (
     <div className="fixed inset-0 flex items-center justify-center z-50">
       <div className="bg-white rounded-lg shadow-lg w-full max-w-md mx-4">
@@ -143,6 +159,7 @@ const TransactionForm = ({
               value={formData.type}
               onChange={handleTypeChange}
               name="type"
+              displayText={displayText}
             />
           </div>
 

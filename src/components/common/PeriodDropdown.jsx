@@ -1,8 +1,9 @@
 import { format } from "date-fns";
 import { id } from "date-fns/locale";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { getPeriod } from "../../utils/api";
 
-const PeriodDropdown = ({ periodData, currentPeriod, setCurrentPeriod }) => {
+const PeriodDropdown = ({ currentPeriod, setCurrentPeriod }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   const handlePeriodChange = (period) => {
@@ -10,6 +11,22 @@ const PeriodDropdown = ({ periodData, currentPeriod, setCurrentPeriod }) => {
 
     setIsDropdownOpen(false);
   };
+
+  const [periods, setPeriods] = useState([]);
+
+  const getUserPeriod = async () => {
+    try {
+      const data = await getPeriod();
+      setPeriods(data);
+    } catch (error) {
+      console.log("error bang");
+      navigate("/login");
+    }
+  };
+
+  useEffect(() => {
+    getUserPeriod();
+  }, []);
 
   return (
     <div className="relative  w-full">
@@ -56,8 +73,8 @@ const PeriodDropdown = ({ periodData, currentPeriod, setCurrentPeriod }) => {
       {isDropdownOpen && (
         <div className="absolute top-full left-0 right-0 bg-white text-gray-800 rounded-b-lg shadow-lg z-10">
           <ul>
-            {periodData
-              ? periodData?.map((period, index) => (
+            {periods
+              ? periods?.map((period, index) => (
                   <li
                     key={index}
                     className="px-4 py-2 hover:bg-gray-100 cursor-pointer"

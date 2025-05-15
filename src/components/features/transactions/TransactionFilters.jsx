@@ -1,14 +1,13 @@
-import React, { useState } from "react";
+
 import PropTypes from "prop-types";
 import SearchBar from "../../ui/SearchBar";
-import DateRangePicker from "../../ui/DateRangePicker";
 import Dropdown from "../../ui/Dropdown";
 import PeriodDropdown from "../../common/PeriodDropdown";
 
 const TransactionFilters = ({
   onSearch,
   onTypeChange,
-  periods,
+
   transactionType,
   currentPeriod,
   setPeriods,
@@ -46,7 +45,6 @@ const TransactionFilters = ({
       />
 
       <PeriodDropdown
-        periodData={periods}
         currentPeriod={currentPeriod}
         setCurrentPeriod={setPeriods}
       />

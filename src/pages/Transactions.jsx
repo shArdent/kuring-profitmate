@@ -24,12 +24,9 @@ const periodData = [
 ];
 
 const Transactions = () => {
-  const navigate = useNavigate();
-  const [periods, setPeriods] = useState(periodData);
   const [currentPeriod, setCurrentPeriod] = useState(null);
 
   const [transactions, setTransactions] = useState([]);
-  const [filtered, setFiltered] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [transactionType, setTransactionType] = useState("");
@@ -50,7 +47,7 @@ const Transactions = () => {
   const fetchTransactions = async () => {
     // Mock API call - replace with actual API call
     if (currentPeriod) {
-      console.log(currentPeriod);
+      console.log(currentPeriod.id);
       setIsLoading(true);
       try {
         const data = await getTransactions(currentPeriod.id);
@@ -247,19 +244,6 @@ const Transactions = () => {
     return "Data Berhasil Diproses";
   };
 
-  const getUserPeriod = async () => {
-    try {
-      const data = await getPeriod();
-      setPeriods(data);
-    } catch (error) {
-      navigate("/login");
-    }
-  };
-
-  useEffect(() => {
-    getUserPeriod();
-  }, []);
-
   return (
     <div className="flex min-h-screen bg-gray-100">
       <Sidebar />
@@ -293,7 +277,6 @@ const Transactions = () => {
             transactionType={transactionType}
             onTypeChange={handleTypeChange}
             currentPeriod={currentPeriod}
-            periods={periods}
             setPeriods={setCurrentPeriod}
           />
         </div>
