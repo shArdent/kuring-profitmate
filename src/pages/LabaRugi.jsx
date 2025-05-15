@@ -98,7 +98,8 @@ const LabaRugi = () => {
         </div>
 
         {/* Grafik */}
-<div className="mb-8 mx-auto bg-white rounded-lg shadow h-[500px] w-full max-w-5xl px-6">
+        <div className="w-full flex justify-center">
+        <div className="mb-10 ml-10 mr-10 bg-white rounded-lg shadow relative h-[400px] w-full ">
           <Line
             data={{
               labels: profitLossData.map((d) => d.tanggal),
@@ -129,51 +130,70 @@ const LabaRugi = () => {
                 }
               ]
             }}
+            options={{
+            responsive: true,
+            maintainAspectRatio: false, 
+            }}
           />
+          </div>
         </div>
 
         {/* Ringkasan */}
-        <div className="grid grid-cols-3 gap-4 px-10 mb-8">
+        <h2 className="text-xl font-semibold px-10 "> Kesimpulan </h2>
+        <div className="grid grid-cols-3 gap-4 px-10 mb-8 mt-4">
           <SummaryBox label="Laba Operasional" value={9220000} />
           <SummaryBox label="Laba Kotor" value={16820000} />
           <SummaryBox label="Laba Bersih" value={8298000} />
         </div>
 
         {/* Kartu Detail */}
-        <div className="grid grid-cols-2 gap-6 px-10">
-          <Card
-            title="Pendapatan"
-            items={[{ label: 'Penjualan Produk', value: 22620000 }]}
-            total={22620000}
-            totalColor="text-green-600"
-          />
-          <Card
-            title="Beban Operasional"
-            items={[
-              { label: 'Sewa Pabrik', value: 3800000 },
-              { label: 'Penyusutan Mesin', value: 1800000 },
-              { label: 'Gaji Karyawan', value: 2000000 }
-            ]}
-            total={7600000}
-            totalColor="text-red-600"
-          />
-          <Card
-            title="Harga Pokok Penjualan (HPPn)"
-            items={[
-              { label: 'Persediaan Awal', value: 800000 },
-              { label: 'Harga Pokok Produksi', value: 5800000 },
-              { label: 'Persediaan Akhir', value: 800000 }
-            ]}
-            total={5800000}
-            totalColor="text-red-600"
-          />
-          <Card
-            title="Beban Lain-lain & Pajak"
-            items={[{ label: 'Pajak', value: 992000 }]}
-            total={992000}
-            totalColor="text-red-600"
-          />
-        </div>
+        <div className="grid grid-cols-2 gap-6 px-10 mt-8">
+  <div className="h-[180px]">
+    <h2 className="text-lg font-semibold text-gray-700">Pendapatan</h2>
+    <Card
+      items={[{ label: 'Penjualan Produk', value: 22620000 }]}
+      total={22620000}
+      totalColor="text-green-600"
+    />
+  </div>
+
+  <div className="h-[180px]">
+    <h2 className="text-lg font-semibold text-gray-700 mb-2">Beban Operasional</h2>
+    <Card
+      items={[
+        { label: 'Sewa Pabrik', value: 3800000 },
+        { label: 'Penyusutan Mesin', value: 1800000 },
+        { label: 'Gaji Karyawan', value: 2000000 }
+      ]}
+      total={7600000}
+      totalColor="text-red-600"
+    />
+  </div>
+
+  <div className="h-[180px]">
+    <h2 className="text-lg font-semibold text-gray-700 mb-2">Harga Pokok Penjualan (HPPn)</h2>
+    <Card
+      items={[
+        { label: 'Persediaan Awal', value: 800000 },
+        { label: 'Harga Pokok Produksi', value: 5800000 },
+        { label: 'Persediaan Akhir', value: 800000 }
+      ]}
+      total={5800000}
+      totalColor="text-red-600"
+    />
+  </div>
+
+  <div className="h-[180px]">
+    <h2 className="text-lg font-semibold text-gray-700 mb-2">Beban Lain-lain & Pajak</h2>
+    <Card
+      items={[{ label: 'Pajak', value: 992000 }]}
+      total={992000}
+      totalColor="text-red-600"
+    />
+  </div>
+</div>
+
+
 
       </div>
     </div>

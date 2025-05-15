@@ -92,7 +92,7 @@ const Dashboard = () => {
 
   return (
     <DashboardLayout title="Dashboard">
-      <div className="p-6">
+      <div className="p-6 mt-6">
         <h1 className="text-2xl font-bold mb-4 px-10">
           Laba Rugi Antar Periode
         </h1>
@@ -126,7 +126,7 @@ const Dashboard = () => {
 
         {/* Current Period */}
         <div className="mb-6">
-          <h2 className="text-xl font-bold mb-4 px-10 ">Periode Saat Ini</h2>
+          <h2 className="text-xl font-bold mb-6 px-10 ">Periode Saat Ini</h2>
 
           {/* Wrapper dengan relative untuk dropdown */}
 

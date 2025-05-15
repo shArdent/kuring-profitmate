@@ -13,7 +13,7 @@ const PeriodDropdown = ({ periodData }) => {
   };
 
   return (
-    <div className="relative px-10 w-full">
+    <div className="relative px-10 mt-6 w-full">
       {/* Box biru sebagai trigger */}
       <div
         onClick={() => setIsDropdownOpen(!isDropdownOpen)}

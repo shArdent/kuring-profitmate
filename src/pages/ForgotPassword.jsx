@@ -81,20 +81,20 @@ const EmailSent = ({ email }) => {
 
       {/* Content */}
       <div className="flex-grow flex items-center justify-center px-4">
-        <div className="bg-white p-8 rounded-md shadow-sm w-full max-w-md">
+        <div className="bg-white px-10 py-8 rounded-md shadow-md w-full max-w-2xl min-h-[350px]">
           <h2 className="text-xl font-semibold text-center mb-6">Email Terkirim</h2>
           
-          <p className="text-center text-sm mb-6">
+          <p className="text-center  text-base font-semibold mb-8 mt-12">
             Kami telah mengirimkan email ke alamat <span className="font-semibold">{email}</span>.<br/>
             Periksa kotak masuk email Anda dan ikuti petunjuk untuk mengatur ulang
             kata sandi akun Anda.
           </p>
           
-          <div className="text-center mt-6">
+          <div className="text-left mt-12 ml-6">
             <p className="text-sm text-gray-600 mb-2">
               Tidak menerima email? <Link to="/forgot-password" className="text-orange-500 hover:underline">Kirim Ulang Email</Link>
             </p>
-            <p className="text-sm text-gray-600">
+            <p className="text-sm text-gray-600 mt-8">
               Alamat email salah? <Link to="/forgot-password" className="text-orange-500 hover:underline">Ubah Alamat Email</Link>
             </p>
           </div>
