@@ -157,113 +157,120 @@ const LabaRugi = () => {
   return (
     <div className="flex min-h-screen">
       <Sidebar />
-      <div className="flex-1 p-6 bg-gray-50 px-10">
-        <h1 className="text-2xl font-bold ">Laporan Laba/Rugi</h1>
+      <div className="flex flex-col w-full">
+        <div className="flex-1 p-6 bg-gray-50 px-10">
+          <h1 className="text-2xl font-bold ">Laporan Laba/Rugi</h1>
 
-        {/* Period Picker */}
-        <div className="mb-8">
-          <PeriodDropdown
-            currentPeriod={currentPeriod}
-            setCurrentPeriod={setCurrentPeriod}
-          />
+          {/* Period Picker */}
+          <div className="mb-8">
+            <PeriodDropdown
+              currentPeriod={currentPeriod}
+              setCurrentPeriod={setCurrentPeriod}
+            />
+          </div>
+
+          {/* Grafik */}
+          <div className="mb-8 mx-auto bg-white rounded-lg shadow h-[500px] w-full max-w-5xl px-6">
+            <Line
+              data={{
+                labels: profitLossData.map((d) => d.tanggal),
+                datasets: [
+                  {
+                    label: "Pendapatan",
+                    borderColor: "#22d3ee",
+                    backgroundColor: "#22d3ee",
+                    data: profitLossData.map((d) =>
+                      Number(d.pendapatan.replace(/[^0-9,-]+/g, ""))
+                    ),
+                  },
+                  {
+                    label: "HPPn",
+                    borderColor: "#f87171",
+                    backgroundColor: "#f87171",
+                    data: profitLossData.map((d) =>
+                      Number(d.hppn.replace(/[^0-9,-]+/g, ""))
+                    ),
+                  },
+                  {
+                    label: "Laba Rugi",
+                    borderColor: "#c084fc",
+                    backgroundColor: "#c084fc",
+                    data: profitLossData.map((d) =>
+                      Number(d.labaRugi.replace(/[^0-9,-]+/g, ""))
+                    ),
+                  },
+                ],
+              }}
+              options={{
+                responsive: true,
+                maintainAspectRatio: false,
+              }}
+            />
+          </div>
         </div>
 
-        {/* Grafik */}
-        <div className="mb-8 mx-auto bg-white rounded-lg shadow h-[500px] w-full max-w-5xl px-6">
-          <Line
-            data={{
-              labels: profitLossData.map((d) => d.tanggal),
-              datasets: [
-                {
-                  label: "Pendapatan",
-                  borderColor: "#22d3ee",
-                  backgroundColor: "#22d3ee",
-                  data: profitLossData.map((d) =>
-                    Number(d.pendapatan.replace(/[^0-9,-]+/g, ""))
-                  ),
-                },
-                {
-                  label: "HPPn",
-                  borderColor: "#f87171",
-                  backgroundColor: "#f87171",
-                  data: profitLossData.map((d) =>
-                    Number(d.hppn.replace(/[^0-9,-]+/g, ""))
-                  ),
-                },
-                {
-                  label: "Laba Rugi",
-                  borderColor: "#c084fc",
-                  backgroundColor: "#c084fc",
-                  data: profitLossData.map((d) =>
-                    Number(d.labaRugi.replace(/[^0-9,-]+/g, ""))
-                  ),
-                },
-              ],
-            }}
-            options={{
-              responsive: true,
-              maintainAspectRatio: false,
-            }}
-          />
+        <div>
+          {/* Ringkasan */}
+          <div className="grid grid-cols-3 gap-4 px-10 mb-8">
+            <SummaryBox
+              label="Laba Operasional"
+              value={report ? report.labaOperasional : 0}
+            />
+            <SummaryBox
+              label="Laba Kotor"
+              value={report ? report.labaKotor : 0}
+            />
+            <SummaryBox
+              label="Laba Bersih"
+              value={report ? report.labaBersih : 0}
+            />
+          </div>
+
+          {/* Kartu Detail */}
+          <div className="grid grid-cols-2 gap-6 px-10">
+            <Card
+              title="Pendapatan"
+              items={report ? report.pendapatan.data : []}
+              total={report ? report.pendapatan.total : 0}
+              totalColor="text-green-600"
+            />
+            <Card
+              title="Beban Operasional"
+              items={report ? report.bebanOperasional.data : []}
+              total={report ? report.bebanOperasional.total : 0}
+              totalColor="text-red-600"
+            />
+            <Card
+              title="Harga Pokok Penjualan (HPPn)"
+              items={
+                report
+                  ? [
+                      {
+                        name: "Persediaan Awal",
+                        amount: report.hargaPokokPenjualan.persediaanAwal,
+                      },
+                      {
+                        name: "Harga Pokok Produksi",
+                        amount: report.hargaPokokPenjualan.hargaPokokProduksi,
+                      },
+                      {
+                        name: "Persediaan Akhir",
+                        amount: report.hargaPokokPenjualan.persediaanAkhir,
+                      },
+                    ]
+                  : []
+              }
+              total={report ? report.hargaPokokPenjualan.total : 0}
+              totalColor="text-red-600"
+            />
+            <Card
+              title="Beban Lain-lain & Pajak"
+              items={report ? report.bebanLain.data : []}
+              total={report ? report.bebanLain.total : 0}
+              totalColor="text-red-600"
+            />
+          </div>
         </div>
-      </div>
-
-      {/* Ringkasan */}
-      <div className="grid grid-cols-3 gap-4 px-10 mb-8">
-        <SummaryBox
-          label="Laba Operasional"
-          value={report ? report.labaOperasional : 0}
-        />
-        <SummaryBox label="Laba Kotor" value={report ? report.labaKotor : 0} />
-        <SummaryBox
-          label="Laba Bersih"
-          value={report ? report.labaBersih : 0}
-        />
-      </div>
-
-      {/* Kartu Detail */}
-      <div className="grid grid-cols-2 gap-6 px-10">
-        <Card
-          title="Pendapatan"
-          items={report ? report.pendapatan.data : []}
-          total={report ? report.pendapatan.total : 0}
-          totalColor="text-green-600"
-        />
-        <Card
-          title="Beban Operasional"
-          items={report ? report.bebanOperasional.data : []}
-          total={report ? report.bebanOperasional.total : 0}
-          totalColor="text-red-600"
-        />
-        <Card
-          title="Harga Pokok Penjualan (HPPn)"
-          items={
-            report
-              ? [
-                  {
-                    name: "Persediaan Awal",
-                    amount: report.hargaPokokPenjualan.persediaanAwal,
-                  },
-                  {
-                    name: "Harga Pokok Produksi",
-                    amount: report.hargaPokokPenjualan.hargaPokokProduksi,
-                  },
-                  {
-                    name: "Persediaan Akhir",
-                    amount: report.hargaPokokPenjualan.persediaanAkhir,
-                  },
-                ]
-              : []
-          }
-          total={report ? report.hargaPokokPenjualan.total : 0}
-          totalColor="text-red-600"
-        />
-        <Card
-          title="Beban Lain-lain & Pajak"
-          items={report ? report.bebanLain.data : []}
-          total={report ? report.bebanLain.total : 0}
-          totalColor="text-red-600"
-        />
       </div>
     </div>
   );
