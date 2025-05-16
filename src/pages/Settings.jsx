@@ -33,7 +33,7 @@ const Settings = () => {
     <div className="flex min-h-screen bg-gray-50">
       <Sidebar />
       
-      <div className="flex-1 p-8">
+      <div className="flex-1 p-8 mt-4">
         <h1 className="text-2xl font-bold mb-6 px-10">Pengaturan</h1>
         
         <form onSubmit={handleSubmit} className="max-w-full px-10 mt-8">

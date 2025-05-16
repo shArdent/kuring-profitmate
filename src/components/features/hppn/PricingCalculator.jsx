@@ -31,11 +31,11 @@ const PricingCalculator = () => {
 
   return (
     <>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8 px-10 mt-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-4 px-10 mt-8">
         {/* Left Column */}
         <div>
           <div className="mb-6">
-            <label className="block text-gray-700 font-semibold mb-2">
+            <label className="block text-gray-700 font-semibold mb-4">
               Jumlah Produk Dihasilkan
             </label>
             <input
@@ -48,7 +48,7 @@ const PricingCalculator = () => {
           </div>
 
           <div className="mb-6">
-            <label className="block text-gray-700 font-semibold mb-2">
+            <label className="block text-gray-700 font-semibold mb-4">
               Nominal Persediaan Awal
             </label>
             <div className="relative">
@@ -69,7 +69,7 @@ const PricingCalculator = () => {
         {/* Right Column */}
         <div>
           <div className="mb-6">
-            <label className="block text-gray-700 font-semibold mb-2">
+            <label className="block text-gray-700 font-semibold mb-4">
               Margin Keuntungan
             </label>
             <div className="relative">
@@ -101,7 +101,7 @@ const PricingCalculator = () => {
           </div>
 
           <div className="mb-6">
-            <label className="block text-gray-700 font-semibold mb-2">
+            <label className="block text-gray-700 font-semibold mb-4">
               Nominal Persediaan Akhir
             </label>
             <div className="relative">
@@ -120,7 +120,7 @@ const PricingCalculator = () => {
         </div>
       </div>
 
-      <div className="mb-8 px-10">
+      <div className="mb-8 px-10 py-5">
         <button
           onClick={handleCalculate}
           className="bg-orange-400 hover:bg-orange-500 text-white font-medium py-2 px-8 rounded"
@@ -131,8 +131,8 @@ const PricingCalculator = () => {
 
       {hpp && (
         <div className="px-10 mb-10">
-          <h2 className="text-xl font-bold mb-4">Hasil Perhitungan</h2>
-          <div className="grid md:grid-cols-3 gap-6">
+          <h2 className="text-xl font-semibold mb-4">Hasil Perhitungan</h2>
+          <div className="grid md:grid-cols-3 gap-6 ">
             <div className="bg-blue-100 rounded-lg p-4 shadow">
               <p className="font-semibold">Harga Pokok Penjualan</p>
               <p className="text-lg font-bold text-blue-800">

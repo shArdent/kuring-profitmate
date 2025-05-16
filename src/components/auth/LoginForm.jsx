@@ -84,12 +84,6 @@ const LoginForm = () => {
           </label>
         </div>
 
-        <Link
-          to="/forgot-password"
-          className="text-sm text-orange-500 hover:underline"
-        >
-          Lupa Password?
-        </Link>
       </div>
 
       {/* Tombol submit ditaruh di tengah */}

@@ -249,7 +249,7 @@ const Transactions = () => {
     <div className="flex min-h-screen bg-gray-100">
       <Sidebar />
 
-      <div className="flex-1 p-6">
+      <div className="flex-1 p-11 ml-6">
         <div className="flex justify-between items-center mb-6">
           <h1 className="text-2xl font-bold">Daftar Transaksi</h1>
           <button
@@ -282,7 +282,9 @@ const Transactions = () => {
           />
         </div>
 
-        <h2 className="text-lg font-medium mb-4">Daftar Transaksi</h2>
+        <div className="mb-4 ml-1 mt-16">
+          <h2 className="text-lg font-semibold mb-4 ">Daftar Transaksi</h2>
+        </div>
 
         <Table
           columns={columns}

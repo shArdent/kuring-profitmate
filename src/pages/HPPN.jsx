@@ -35,12 +35,12 @@ const HPPN = () => {
   return (
     <div className="flex min-h-screen">
       <Sidebar />
-      <main className="flex-1 bg-gray-50">
-        <h1 className="text-2xl font-bold mb-4 p-6 px-10">Harga Pokok Penjualan</h1>
+      <main className="flex-1 bg-gray-50 ml-6 mt-9">
+        <h1 className="text-2xl font-bold mb-4 p-3 px-10 ">Harga Pokok Penjualan</h1>
         
         <div className="mb-6">
-          <h2 className="text-lg font-medium px-10">Periode Saat Ini</h2>
-          <div className="w full max-w- px-10">
+          <h2 className="text-lg font-semibold px-10 py-3">Periode Saat Ini</h2>
+          <div className="w full max-w- px-10 mt-1 ">
             <PeriodDropdown periodData={periodData} />
           </div>
         </div>
@@ -50,7 +50,7 @@ const HPPN = () => {
         
         {/* Display calculation results */}
         <div className="px-10 mb-10">
-          <h2 className="text-xl font-bold mb-6">Hasil Perhitungan</h2>
+          <h2 className="text-xl font-bold mb-6 py-5">Hasil Perhitungan</h2>
           
           <div className="space-y-4">
             <div className="bg-blue-500 text-white p-4 rounded flex justify-between items-center">

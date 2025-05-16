@@ -325,13 +325,13 @@ const HPP = () => {
     <div className="flex h-screen">
       <Sidebar />
       <div className="flex-1 overflow-auto">
-        <div className="p-6 bg-gray-50">
+        <div className="p-12 bg-gray-50 ml-4">
           <h1 className="text-2xl font-bold mb-6">Harga Pokok Produksi</h1>
 
           {/* Dropdown Periode */}
-          <div className="mb-6">
-            <h2 className="text-lg font-medium mb-2">Periode Saat Ini</h2>
-            <div className="w-full">
+          <div className="mb-6 mt-6">
+            <h2 className="text-lg font-semibold mb-2 ">Periode Saat Ini</h2>
+            <div className="w-full mt-4 ">
               <PeriodDropdown
                 currentPeriod={currentPeriod}
                 setCurrentPeriod={setCurrentPeriod}
@@ -340,9 +340,9 @@ const HPP = () => {
           </div>
 
           {/* Bahan Baku Section */}
-          <div className="mb-8">
-            <div className="flex justify-between items-center mb-2">
-              <h2 className="text-lg font-bold">Daftar Biaya Bahan Baku</h2>
+          <div className="mb-8 mt-8 ">
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-lg font-bold ">Daftar Biaya Bahan Baku</h2>
               <Button
                 variant="primary"
                 onClick={() => handleAddClick("bahanBaku")}
@@ -363,8 +363,8 @@ const HPP = () => {
           </div>
 
           {/* Tenaga Kerja Section */}
-          <div className="mb-8">
-            <div className="flex justify-between items-center mb-2">
+          <div className="mb-8 mt-8">
+            <div className="flex justify-between items-center mb-6">
               <h2 className="text-lg font-bold">Daftar Biaya Tenaga Kerja</h2>
               <Button
                 variant="primary"
@@ -386,8 +386,8 @@ const HPP = () => {
           </div>
 
           {/* Beban Section */}
-          <div className="mb-8">
-            <div className="flex justify-between items-center mb-2">
+          <div className="mb-8 mt-8">
+            <div className="flex justify-between items-center mb-6">
               <h2 className="text-lg font-bold">
                 Daftar Biaya Beban (overhead)
               </h2>
