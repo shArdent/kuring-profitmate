@@ -1,32 +1,56 @@
-import React, { useState } from 'react';
-import Sidebar from '../components/ui/Sidebar';
-import Input from '../components/ui/Input';
-import Button from '../components/ui/Button';
+import { useEffect, useState } from "react";
+import Sidebar from "../components/ui/Sidebar";
+import Input from "../components/ui/Input";
+import Button from "../components/ui/Button";
+import apiClient from "../utils/axios";
+import toast from "react-hot-toast";
 
 const Settings = () => {
   const [formData, setFormData] = useState({
-    nama: '',
-    email: '',
-    idTransaksi: '',
-    namaUsaha: '',
-    passwordLama: '',
-    passwordBaru: '',
-    konfirmasiPassword: ''
+    name: "",
+    email: "",
+    businessName: "",
   });
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prevState => ({
+    setFormData((prevState) => ({
       ...prevState,
-      [name]: value
+      [name]: value,
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleGetMe = async () => {
+    try {
+      const {
+        data: { data },
+      } = await apiClient.get("/user");
+
+      setFormData({
+        name: data.name,
+        email: data.email,
+        businessName: data.businessName,
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    handleGetMe();
+  }, []);
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Handle form submission logic here
-    console.log('Form submitted:', formData);
-    // You would typically send this data to an API
+    try {
+      const {
+        data: { data },
+      } = await apiClient.patch("/user", formData);
+
+      setFormData(data);
+    } catch (error) {
+      toast.error("Gagal mengubah data diri");
+    }
   };
 
   return (
@@ -35,70 +59,38 @@ const Settings = () => {
       
       <div className="flex-1 p-8 mt-4">
         <h1 className="text-2xl font-bold mb-6 px-10">Pengaturan</h1>
-        
+
         <form onSubmit={handleSubmit} className="max-w-full px-10 mt-8">
-          <label className="block text-sm font-semibold mb-1">Nama Pengguna</label>
-          <Input 
-            name="nama"
+          <label className="block text-sm font-semibold mb-1">
+            Nama Pengguna
+          </label>
+          <Input
+            name="name"
             placeholder="Masukan Nama Pengguna"
-            value={formData.nama}
+            value={formData.name}
             onChange={handleChange}
           />
-          
+
           <label className="block text-sm font-semibold mb-1">Email</label>
-          <Input 
+          <Input
             type="email"
             name="email"
             placeholder="Masukan Email"
+            disabled={true}
             value={formData.email}
             onChange={handleChange}
           />
-          
-          <label className="block text-sm font-semibold mb-1">Id Transaksi</label>
-          <Input 
-            name="idTransaksi"
-            placeholder="Masukan Id Transaksi"
-            value={formData.idTransaksi}
-            onChange={handleChange}
-          />
-          
+
           <label className="block text-sm font-semibold mb-1">Nama Usaha</label>
-          <Input 
-            name="namaUsaha"
+          <Input
+            name="businessName"
             placeholder="Masukan Nama Usaha"
-            value={formData.namaUsaha}
+            value={formData.businessName}
             onChange={handleChange}
           />
-          
-          <label className="block text-sm font-semibold mb-1">Password Lama</label>
-          <Input 
-            type="password"
-            name="passwordLama"
-            placeholder="Masukan Password Lama"
-            value={formData.passwordLama}
-            onChange={handleChange}
-          />
-          
-          <label className="block text-sm font-semibold mb-1">Password Baru</label>
-          <Input 
-            type="password"
-            name="passwordBaru"
-            placeholder="Masukan Password Baru"
-            value={formData.passwordBaru}
-            onChange={handleChange}
-          />
-          
-          <label className="block text-sm font-semibold mb-1">Konfirmasi Password</label>
-          <Input 
-            type="password"
-            name="konfirmasiPassword"
-            placeholder="Konfirmasi Password"
-            value={formData.konfirmasiPassword}
-            onChange={handleChange}
-          />
-          
+
           <div className="mt-6">
-            <Button type="submit" variant="primary" >
+            <Button type="submit" variant="primary">
               Simpan
             </Button>
           </div>

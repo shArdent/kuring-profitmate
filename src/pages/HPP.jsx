@@ -10,6 +10,7 @@ import { getPeriod } from "../utils/api";
 import { useNavigate } from "react-router-dom";
 import apiClient from "../utils/axios";
 import toast from "react-hot-toast";
+import { formatCurrency } from "../utils/formatter";
 
 const periodData = [
   {
@@ -46,6 +47,8 @@ const HPP = () => {
   const [notificationType, setNotificationType] = useState("success");
   const [deleteInfo, setDeleteInfo] = useState({ type: "", item: null });
 
+  const navigate = useNavigate();
+
   const [hppData, setHppData] = useState(null);
 
   const getHppData = async () => {
@@ -53,10 +56,11 @@ const HPP = () => {
       const {
         data: { data },
       } = await apiClient.get(`/production/${currentPeriod.id}`);
+      console.log(data);
       setHppData(data);
     } catch (error) {
       console.log(error);
-      toast.error("Gagal mendapatkan data")
+      toast.error("Gagal mendapatkan data");
     }
   };
 
@@ -66,51 +70,30 @@ const HPP = () => {
     }
   }, [currentPeriod]);
 
-  // State for the three data types
-  const [bahanBakuData, setBahanBakuData] = useState([
-    { id: 1, namaBahan: "Kain Katun", totalHarga: "Rp10.500.000" },
-    { id: 2, namaBahan: "Benang Jahit", totalHarga: "Rp1.500.000" },
-    { id: 3, namaBahan: "Benang Wol", totalHarga: "Rp5.000.000" },
-    { id: 4, namaBahan: "Benang Wol", totalHarga: "Rp5.000.000" },
-  ]);
-
-  const [tenagaKerjaData, setTenagaKerjaData] = useState([
-    { id: 1, namaPekerja: "Udin", nominalBayaran: "Rp1.500.000" },
-    { id: 2, namaPekerja: "Beno", nominalBayaran: "Rp1.500.000" },
-    { id: 3, namaPekerja: "Iben", nominalBayaran: "Rp1.000.000" },
-    { id: 4, namaPekerja: "Uwan", nominalBayaran: "Rp1.300.000" },
-  ]);
-
-  const [bebanData, setBebanData] = useState([
-    { id: 1, namaBeban: "Angkut Transportasi", nominalBeban: "Rp1.500.000" },
-    { id: 2, namaBeban: "Listrik", nominalBeban: "Rp1.500.000" },
-    { id: 3, namaBeban: "Upah Bayaran", nominalBeban: "Rp1.000.000" },
-  ]);
-
   // Field definitions for each popup type
   const fieldsMap = {
     bahanBaku: [
-      { name: "namaBahan", label: "Nama Bahan", required: true },
+      { name: "name", label: "Nama Bahan", required: true },
       {
-        name: "totalHarga",
+        name: "amount",
         label: "Total Harga",
         type: "text",
         required: true,
       },
     ],
     tenagaKerja: [
-      { name: "namaPekerja", label: "Nama Pekerja", required: true },
+      { name: "name", label: "Nama Pekerja", required: true },
       {
-        name: "nominalBayaran",
+        name: "amount",
         label: "Nominal Bayaran",
         type: "text",
         required: true,
       },
     ],
     beban: [
-      { name: "namaBeban", label: "Nama Beban", required: true },
+      { name: "name", label: "Nama Beban", required: true },
       {
-        name: "nominalBeban",
+        name: "amount",
         label: "Nominal Beban",
         type: "text",
         required: true,
@@ -128,54 +111,50 @@ const HPP = () => {
   };
 
   // Handle edit action
-  const handleEdit = (type, row) => {
+  const handleEdit = async (type, row) => {
     setPopupType(type);
-    setIsEditing(true);
 
-    // Set the values based on the row data and type
-    if (type === "bahanBaku") {
-      setPopupValues({
-        id: row.id,
-        namaBahan: row.namaBahan,
-        totalHarga: row.totalHarga,
-      });
-    } else if (type === "tenagaKerja") {
-      setPopupValues({
-        id: row.id,
-        namaPekerja: row.namaPekerja,
-        nominalBayaran: row.nominalBayaran,
-      });
-    } else if (type === "beban") {
-      setPopupValues({
-        id: row.id,
-        namaBeban: row.namaBeban,
-        nominalBeban: row.nominalBeban,
-      });
-    }
+    console.log(row);
+    setIsEditing(true);
+    console.log(type);
+
+    setPopupValues({
+      id: row.id,
+      name: row.name,
+      amount: Number(row.amount),
+    });
 
     setShowPopup(true);
   };
 
   // Show confirmation modal before deleting
   const confirmDelete = (type, row) => {
-    setDeleteInfo({ type, item: row });
+    setDeleteInfo({ type: row.category, item: row });
     setShowConfirmation(true);
   };
 
   // Perform actual deletion after confirmation
-  const handleDeleteConfirmed = () => {
+  const handleDeleteConfirmed = async () => {
     const { type, item } = deleteInfo;
     let deletedItemName = "";
+    console.log(deleteInfo);
 
-    if (type === "bahanBaku") {
-      setBahanBakuData(bahanBakuData.filter((data) => data.id !== item.id));
-      deletedItemName = item.namaBahan;
-    } else if (type === "tenagaKerja") {
-      setTenagaKerjaData(tenagaKerjaData.filter((data) => data.id !== item.id));
-      deletedItemName = item.namaPekerja;
-    } else if (type === "beban") {
-      setBebanData(bebanData.filter((data) => data.id !== item.id));
-      deletedItemName = item.namaBeban;
+    if (type === "INGRIDIENTS") {
+      deletedItemName = item.name;
+    } else if (type === "LABOR") {
+      deletedItemName = item.name;
+    } else if (type === "OVERHEAD") {
+      deletedItemName = item.name;
+    }
+
+    try {
+      await apiClient.delete(`/production/${item.id}`);
+
+      await getHppData();
+    } catch (error) {
+      console.log(error);
+      toast.error("Gagal menghapus ", item.name);
+      return;
     }
 
     setShowConfirmation(false);
@@ -213,75 +192,72 @@ const HPP = () => {
     setShowPopup(true);
   };
 
-  const handlePopupSubmit = (values) => {
+  const handlePopupSubmit = async (values) => {
     if (isEditing) {
-      // Update existing item
-      if (popupType === "bahanBaku") {
-        setBahanBakuData(
-          bahanBakuData.map((item) =>
-            item.id === values.id
-              ? {
-                  id: values.id,
-                  namaBahan: values.namaBahan,
-                  totalHarga: values.totalHarga,
-                }
-              : item
-          )
-        );
-      } else if (popupType === "tenagaKerja") {
-        setTenagaKerjaData(
-          tenagaKerjaData.map((item) =>
-            item.id === values.id
-              ? {
-                  id: values.id,
-                  namaPekerja: values.namaPekerja,
-                  nominalBayaran: values.nominalBayaran,
-                }
-              : item
-          )
-        );
-      } else if (popupType === "beban") {
-        setBebanData(
-          bebanData.map((item) =>
-            item.id === values.id
-              ? {
-                  id: values.id,
-                  namaBeban: values.namaBeban,
-                  nominalBeban: values.nominalBeban,
-                }
-              : item
-          )
-        );
+      const payload = { ...values, amount: Number(values.amount) };
+      try {
+        console.log(values);
+        await apiClient.patch(`/production/${values.id}`, payload);
+        await getHppData();
+        toast.success("Berhasil mengedit item");
+      } catch (error) {
+        console.log(error);
+        toast.error("Gagal mengedit item");
+        return;
       }
     } else {
       // Add new item
       if (popupType === "bahanBaku") {
-        setBahanBakuData([
-          ...bahanBakuData,
-          {
-            id: bahanBakuData.length + 1,
-            namaBahan: values.namaBahan,
-            totalHarga: values.totalHarga,
-          },
-        ]);
+        const payload = {
+          periodesId: currentPeriod.id,
+          name: values.name,
+          amount: Number(values.amount),
+          category: "INGRIDIENTS",
+        };
+
+        console.log(payload);
+
+        try {
+          await apiClient.post("/production", payload);
+          toast.success("Berhasil menambahkan biaya");
+          navigate(0);
+        } catch (error) {
+          console.log(error);
+          toast.error("Gagal menambahkan biaya bahan baku");
+        }
       } else if (popupType === "tenagaKerja") {
-        setTenagaKerjaData([
-          ...tenagaKerjaData,
-          {
-            id: tenagaKerjaData.length + 1,
-            namaPekerja: values.namaPekerja,
-            nominalBayaran: values.nominalBayaran,
-          },
-        ]);
+        const payload = {
+          periodesId: currentPeriod.id,
+          name: values.name,
+          amount: Number(values.amount),
+          category: "LABOR",
+        };
+        try {
+          await apiClient.post("/production", payload);
+          toast.success("Berhasil menambahkan biaya");
+          console.log(payload);
+          navigate(0);
+        } catch (error) {
+          console.log(error);
+          toast.error("Gagal menambahkan biaya tenaga kerja");
+        }
       } else if (popupType === "beban") {
-        setBebanData([
-          ...bebanData,
-          {
-            id: bebanData.length + 1,
-            namaBeban: values.namaBeban,
-            nominalBeban: values.nominalBeban,
-          },
-        ]);
+        const payload = {
+          periodesId: currentPeriod.id,
+          name: values.name,
+          amount: Number(values.amount),
+          category: "OVERHEAD",
+        };
+
+        console.log(payload);
+        try {
+          await apiClient.post("/production", payload);
+          toast.success("Berhasil menambahkan biaya");
+          navigate(0);
+        } catch (error) {
+          console.log(error);
+          toast.error("Gagal menambahkan biaya overhead");
+        }
       }
     }
 
@@ -291,8 +267,8 @@ const HPP = () => {
 
   const columnsMap = {
     bahanBaku: [
-      { key: "namaBahan", header: "Nama Bahan", width: "45%" },
-      { key: "totalHarga", header: "Total Harga", width: "40%" },
+      { key: "name", header: "Nama Bahan", width: "45%" },
+      { key: "amount", header: "Harga", width: "40%" },
       {
         key: "actions",
         header: "Aksi",
@@ -300,8 +276,8 @@ const HPP = () => {
       },
     ],
     tenagaKerja: [
-      { key: "namaPekerja", header: "Nama Pekerja", width: "45%" },
-      { key: "nominalBayaran", header: "Nominal Bayaran", width: "40%" },
+      { key: "name", header: "Nama Pekerja", width: "45%" },
+      { key: "amount", header: "Nominal Bayaran", width: "40%" },
       {
         key: "actions",
         header: "Aksi",
@@ -309,8 +285,8 @@ const HPP = () => {
       },
     ],
     beban: [
-      { key: "namaBeban", header: "Nama Beban", width: "45%" },
-      { key: "nominalBeban", header: "Nominal Beban", width: "40%" },
+      { key: "name", header: "Nama Beban", width: "45%" },
+      { key: "amount", header: "Nominal Beban", width: "40%" },
       {
         key: "actions",
         header: "Aksi",
@@ -358,7 +334,10 @@ const HPP = () => {
             />
             <div className="bg-white shadow rounded-b-lg px-6 py-4 flex justify-between text-sm text-gray-700 border-t">
               <span className="font-semibold">Total Biaya Bahan Baku</span>
-              <span className="font-semibold">Rp </span>
+              <span className="font-semibold">
+                Rp.{" "}
+                {formatCurrency(Number(hppData ? hppData.totalBahanBaku : 0))}{" "}
+              </span>
             </div>
           </div>
 
@@ -375,13 +354,18 @@ const HPP = () => {
             </div>
             <Table
               columns={columnsMap.tenagaKerja}
-              data={tenagaKerjaData}
+              data={hppData ? hppData.biayaTenagaKerja : []}
               onEdit={(row) => handleEdit("tenagaKerja", row)}
               onDelete={(row) => confirmDelete("tenagaKerja", row)}
             />
             <div className="bg-white shadow rounded-b-lg px-6 py-4 flex justify-between text-sm text-gray-700 border-t">
               <span className="font-semibold">Total Biaya Tenaga Kerja</span>
-              <span className="font-semibold">Rp </span>
+              <span className="font-semibold">
+                Rp.{" "}
+                {formatCurrency(
+                  Number(hppData ? hppData.totalBiayaTenagaKerja : 0)
+                )}{" "}
+              </span>
             </div>
           </div>
 
@@ -397,13 +381,18 @@ const HPP = () => {
             </div>
             <Table
               columns={columnsMap.beban}
-              data={bebanData}
+              data={hppData ? hppData.biayaOverhead : []}
               onEdit={(row) => handleEdit("beban", row)}
               onDelete={(row) => confirmDelete("beban", row)}
             />
             <div className="bg-white shadow rounded-b-lg px-6 py-4 flex justify-between text-sm text-gray-700 border-t">
               <span className="font-semibold">Total Biaya Beban</span>
-              <span className="font-semibold">Rp {"test"}</span>
+              <span className="font-semibold">
+                Rp.{" "}
+                {formatCurrency(
+                  Number(hppData ? hppData.totalBiayaOverhead : 0)
+                )}
+              </span>
             </div>
           </div>
 

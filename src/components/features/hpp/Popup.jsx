@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
-import PropTypes from 'prop-types';
-import Button from '../../ui/Button';
-import NotificationModal from '../../ui/NotificationModal';
+import React, { useState } from "react";
+import PropTypes from "prop-types";
+import Button from "../../ui/Button";
+import NotificationModal from "../../ui/NotificationModal";
 
 const Popup = ({
   isOpen,
@@ -11,11 +11,11 @@ const Popup = ({
   fields,
   values,
   onChange,
-  isEditing = false
+  isEditing = false,
 }) => {
   const [showModal, setShowModal] = useState(false);
-  const [modalMessage, setModalMessage] = useState('');
-  const [modalType, setModalType] = useState('success');
+  const [modalMessage, setModalMessage] = useState("");
+  const [modalType, setModalType] = useState("success");
 
   const handleInputChange = (field, value) => {
     onChange({ ...values, [field]: value });
@@ -25,12 +25,17 @@ const Popup = ({
     e.preventDefault();
 
     // Jalankan fungsi submit dari parent
-    onSubmit(values);
+    try {
+      onSubmit(values);
+      setModalType("success");
+      setModalMessage(
+        isEditing ? "Data berhasil diperbarui!" : "Data berhasil ditambahkan!"
+      );
+      setShowModal(true);
+    } catch (error) {}
 
+    handleCloseModal();
     // Tampilkan notifikasi modal dengan pesan yang sesuai
-    setModalMessage(isEditing ? 'Data berhasil diperbarui!' : 'Data berhasil ditambahkan!');
-    setModalType('success');
-    setShowModal(true);
 
     // Jangan tutup popup langsung di sini
     // Tunggu user klik OK di modal
@@ -55,10 +60,12 @@ const Popup = ({
                     {field.label}
                   </label>
                   <input
-                    type={field.type || 'text'}
+                    type={field.type || "text"}
                     placeholder={field.placeholder}
-                    value={values[field.name] || ''}
-                    onChange={(e) => handleInputChange(field.name, e.target.value)}
+                    value={values[field.name] || ""}
+                    onChange={(e) =>
+                      handleInputChange(field.name, e.target.value)
+                    }
                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-400"
                     required={field.required}
                   />
@@ -74,12 +81,8 @@ const Popup = ({
                 >
                   Batal
                 </Button>
-                <Button
-                  type="submit"
-                  variant="primary"
-                  fullWidth
-                >
-                  {isEditing ? 'Simpan' : 'Tambahkan'}
+                <Button type="submit" variant="primary" fullWidth>
+                  {isEditing ? "Simpan" : "Tambahkan"}
                 </Button>
               </div>
             </form>
@@ -109,12 +112,12 @@ Popup.propTypes = {
       label: PropTypes.string.isRequired,
       type: PropTypes.string,
       placeholder: PropTypes.string,
-      required: PropTypes.bool
+      required: PropTypes.bool,
     })
   ).isRequired,
   values: PropTypes.object.isRequired,
   onChange: PropTypes.func.isRequired,
-  isEditing: PropTypes.bool
+  isEditing: PropTypes.bool,
 };
 
 export default Popup;
