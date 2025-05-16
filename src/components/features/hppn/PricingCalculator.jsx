@@ -1,32 +1,62 @@
-import React, { useState } from "react";
+import { useEffect, useState } from "react";
+import apiClient from "../../../utils/axios";
+import toast from "react-hot-toast";
+import { formatCurrency } from "../../../utils/formatter";
 
-const PricingCalculator = () => {
-  const [productCount, setProductCount] = useState("");
-  const [initialInventory, setInitialInventory] = useState("");
-  const [finalInventory, setFinalInventory] = useState("");
-  const [marginProfit, setMarginProfit] = useState("50%");
-  const [hpp, setHPP] = useState(null);
+const PricingCalculator = ({ period, hppnData, handleGetData }) => {
+  const [payload, setPayload] = useState({
+    periodesId: period ? period.id : "",
+    productCount: hppnData ? hppnData.jumlahProduk : "",
+    initialInventory: hppnData ? hppnData.persediaanAwal : "",
+    endingInventory: hppnData ? hppnData.persediaanAkhir : "",
+    profitMargin: hppnData ? hppnData.marginUntung : "",
+  });
 
-  const handleCalculate = () => {
-    const jumlahProduk = parseFloat(productCount);
-    const persAwal = parseFloat(initialInventory);
-    const persAkhir = parseFloat(finalInventory);
-    const margin = parseFloat(marginProfit) / 100;
+  useEffect(() => {
+    console.log(hppnData);
+    if (period) {
+      setPayload(() => ({
+        productCount: hppnData ? hppnData.jumlahProduk : "",
+        initialInventory: hppnData ? hppnData.persediaanAwal : "",
+        endingInventory: hppnData ? hppnData.persediaanAkhir : "",
+        profitMargin: hppnData ? hppnData.marginUntung * 100 : "",
+        periodesId: period.id,
+      }));
+    }
+  }, [period, hppnData]);
 
-    if (isNaN(jumlahProduk) || isNaN(persAwal) || isNaN(persAkhir)) {
-      alert("Mohon isi semua field dengan angka yang valid.");
+  const handleCalculate = async () => {
+    const values = {
+      ...payload,
+      profitMargin: payload.profitMargin / 100,
+    };
+
+    console.log(values);
+
+    if (
+      !period ||
+      !payload.endingInventory ||
+      !payload.initialInventory ||
+      !payload.productCount ||
+      !payload.profitMargin
+    ) {
+      toast.error("Data harus diisi terlebih dahulu");
       return;
     }
 
-    const hppPenjualan = persAwal - persAkhir;
-    const hppPerProduk = hppPenjualan / jumlahProduk;
-    const hargaJual = hppPerProduk * (1 + margin);
+    try {
+      if (!hppnData) {
+        await apiClient.post(`/selling`, values);
+        toast.success("Berhasil Menambah data harga pokok penjualan");
+        await handleGetData();
+      }
 
-    setHPP({
-      hppPenjualan,
-      hppPerProduk,
-      hargaJual,
-    });
+      await apiClient.patch(`/selling/${hppnData.id}`, values);
+      toast.success("Berhasil mengubah data harga pokok penjualan");
+      await handleGetData();
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -42,8 +72,13 @@ const PricingCalculator = () => {
               type="text"
               className="w-full border border-gray-300 rounded p-3"
               placeholder="Masukan Jumlah Produk"
-              value={productCount}
-              onChange={(e) => setProductCount(e.target.value)}
+              value={payload.productCount}
+              onChange={(e) =>
+                setPayload((prev) => ({
+                  ...prev,
+                  productCount: Number(e.target.value),
+                }))
+              }
             />
           </div>
 
@@ -56,8 +91,13 @@ const PricingCalculator = () => {
                 type="text"
                 className="w-full border border-gray-300 rounded p-3 pl-10"
                 placeholder="0"
-                value={initialInventory}
-                onChange={(e) => setInitialInventory(e.target.value)}
+                value={payload.initialInventory}
+                onChange={(e) =>
+                  setPayload((prev) => ({
+                    ...prev,
+                    initialInventory: e.target.value,
+                  }))
+                }
               />
               <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">
                 Rp.
@@ -70,33 +110,21 @@ const PricingCalculator = () => {
         <div>
           <div className="mb-6">
             <label className="block text-gray-700 font-semibold mb-2">
-              Margin Keuntungan
+              Margin Keuntungan (%)
             </label>
             <div className="relative">
-              <select
-                className="w-full border border-gray-300 rounded p-3 appearance-none pr-10"
-                value={marginProfit}
-                onChange={(e) => setMarginProfit(e.target.value)}
-              >
-                <option value="50%">50%</option>
-                <option value="60%">60%</option>
-                <option value="75%">75%</option>
-                <option value="100%">100%</option>
-              </select>
-              <div className="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-5 w-5 text-gray-500"
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-              </div>
+              <input
+                type="text"
+                className="w-full border border-gray-300 rounded p-3 "
+                placeholder="0"
+                value={payload.profitMargin}
+                onChange={(e) =>
+                  setPayload((prev) => ({
+                    ...prev,
+                    profitMargin: Number(e.target.value),
+                  }))
+                }
+              />
             </div>
           </div>
 
@@ -109,8 +137,13 @@ const PricingCalculator = () => {
                 type="text"
                 className="w-full border border-gray-300 rounded p-3 pl-10"
                 placeholder="0"
-                value={finalInventory}
-                onChange={(e) => setFinalInventory(e.target.value)}
+                value={payload.endingInventory}
+                onChange={(e) =>
+                  setPayload((prev) => ({
+                    ...prev,
+                    endingInventory: e.target.value,
+                  }))
+                }
               />
               <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">
                 Rp.
@@ -129,26 +162,26 @@ const PricingCalculator = () => {
         </button>
       </div>
 
-      {hpp && (
+      {hppnData && (
         <div className="px-10 mb-10">
           <h2 className="text-xl font-bold mb-4">Hasil Perhitungan</h2>
           <div className="grid md:grid-cols-3 gap-6">
             <div className="bg-blue-100 rounded-lg p-4 shadow">
               <p className="font-semibold">Harga Pokok Penjualan</p>
               <p className="text-lg font-bold text-blue-800">
-                Rp. {hpp.hppPenjualan.toLocaleString("id-ID")}
+                Rp. {formatCurrency(hppnData.hargaPokokPenjualan)}
               </p>
             </div>
             <div className="bg-blue-100 rounded-lg p-4 shadow">
               <p className="font-semibold">HPP per Produk</p>
               <p className="text-lg font-bold text-blue-800">
-                Rp. {hpp.hppPerProduk.toLocaleString("id-ID")}
+                Rp. {formatCurrency(hppnData.hargaPokokPenjualanPerUnit)}
               </p>
             </div>
             <div className="bg-blue-100 rounded-lg p-4 shadow">
               <p className="font-semibold">Harga Jual</p>
               <p className="text-lg font-bold text-blue-800">
-                Rp. {hpp.hargaJual.toLocaleString("id-ID")}
+                Rp. {formatCurrency(hppnData.hargaJualPerProduk)}
               </p>
             </div>
           </div>
