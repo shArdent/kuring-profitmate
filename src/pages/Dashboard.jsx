@@ -155,9 +155,10 @@ const Dashboard = () => {
         </div>
 
         {/* Current Period */}
-        <div className="mb-6 px-10">
-          <h2 className="text-xl font-bold mb-4 ">Periode Saat Ini</h2>
-
+        <div className="mb-6 px-10 ">
+          <div className="mb-4">
+            <h2 className="text-xl font-bold mb-4 ">Periode Saat Ini</h2>
+          </div>
           {/* Wrapper dengan relative untuk dropdown */}
 
           <PeriodDropdown

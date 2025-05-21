@@ -53,7 +53,7 @@ const Popup = ({
           <div className="bg-white rounded-lg border-2 border-gray-300 shadow-lg p-6 w-full max-w-md mx-4">
             <h2 className="text-xl font-bold text-center mb-6">{title}</h2>
 
-            <form onSubmit={handleFormSubmit}>
+            <form onSubmit={handleFormSubmit} className="mt-4">
               {fields.map((field) => (
                 <div key={field.name} className="mb-4">
                   <label className="block text-base font-medium mb-1">

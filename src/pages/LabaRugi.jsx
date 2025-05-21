@@ -200,14 +200,14 @@ const LabaRugi = () => {
   }, []);
 
   return (
-    <div className="flex min-h-screen">
+    <div className="flex min-h-screen ">
       <Sidebar />
-      <div className="flex flex-col w-full">
+      <div className="flex flex-col flex-1 p-6">
         <div className="flex-1 p-6 bg-gray-50 px-10">
-          <h1 className="text-2xl font-bold ">Laporan Laba/Rugi</h1>
+          <h1 className="text-2xl font-bold">Laporan Laba/Rugi</h1>
 
           {/* Period Picker */}
-          <div className="mb-8">
+          <div className="mb-8 mt-6">
             <PeriodDropdown
               currentPeriod={currentPeriod}
               setCurrentPeriod={setCurrentPeriod}
@@ -215,7 +215,8 @@ const LabaRugi = () => {
           </div>
 
           {/* Grafik */}
-          <div className="mb-8 flex items-center mx-auto bg-white rounded-lg shadow h-[500px] w-full max-w-5xl px-6">
+          <div className="w-full flex justify-center">
+          <div className="mb-8 bg-white rounded-lg shadow h-[300px] w-full max-w-8xl px-6">
             {summary ? (
               <Line
                 data={{
@@ -261,6 +262,7 @@ const LabaRugi = () => {
             ) : (
               <h1 className="text-center w-full">Tidak ada data</h1>
             )}
+            </div>
           </div>
         </div>
 
