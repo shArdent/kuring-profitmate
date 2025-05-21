@@ -85,9 +85,13 @@ const Transactions = () => {
 
   // Show confirmation before adding
   const handleSubmitAddTransaction = (transactionData) => {
+    console.log("ini submit");
+    console.log(showConfirmModal);
+    console.log("transaction modal : ", showTransactionModal);
     setPendingTransactionData(transactionData);
     setConfirmModalType("add");
     setShowConfirmModal(true);
+    setShowTransactionModal(false);
   };
 
   useEffect(() => {
@@ -121,6 +125,7 @@ const Transactions = () => {
   const handleSubmitEditTransaction = (transactionData) => {
     setPendingTransactionData(transactionData);
     setConfirmModalType("edit");
+    setShowTransactionModal(false);
     setShowConfirmModal(true);
   };
 
