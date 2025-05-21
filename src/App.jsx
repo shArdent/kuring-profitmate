@@ -43,7 +43,7 @@ function App() {
         <Route path="/transactiondetail/:id" element={<TransactionDetail />} />
         
         {/* Default Route */}
-        <Route path="/" element={<Navigate to="/dashboard" replace />} />
+        <Route path="/" element={<Navigate to="/login" replace />} />
       </Routes>
     </Router>
   );
