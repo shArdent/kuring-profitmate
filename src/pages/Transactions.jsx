@@ -11,18 +11,6 @@ import { format, parseISO } from "date-fns";
 import { id } from "date-fns/locale";
 import { formatCurrency } from "../utils/formatter";
 
-const periodData = [
-  {
-    name: "Q1 2024",
-    startDate: parseISO("2024-01-01"),
-    endDate: parseISO("2024-03-31"),
-  },
-  {
-    name: "Q2 2024",
-    startDate: parseISO("2024-04-01"),
-    endDate: parseISO("2024-06-30"),
-  },
-];
 
 const Transactions = () => {
   const [currentPeriod, setCurrentPeriod] = useState(null);
