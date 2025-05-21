@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const apiClient = axios.create({
-  baseURL: "https://nestjs-profitmate-production.up.railway.app",
+  baseURL: "http://localhost:5173",
   withCredentials: true,
 });
 
