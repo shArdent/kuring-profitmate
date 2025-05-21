@@ -192,7 +192,7 @@ const Transactions = () => {
       render: (row) => {
         // Format date: YYYY-MM-DD to DD/MM/YYYY
 
-        return format(row.createdAt, "MMM yyy", {
+        return format(row.createdAt, "ddd MMM yyy", {
           locale: id,
         });
       },

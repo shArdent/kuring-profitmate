@@ -36,7 +36,7 @@ const TextField = ({
           value={value}
           onChange={onChange}
           rows={rows}
-        />
+        ></textarea>
       ) : (
         <input
           type="text"
@@ -50,21 +50,5 @@ const TextField = ({
   );
 };
 
-// Komponen DeskripsiTransaksi sesuai dengan desain
-const DeskripsiTransaksi = () => {
-  const [deskripsi, setDeskripsi] = React.useState("");
-  
-  return (
-    <TextField
-      label="Deskripsi Transaksi"
-      placeholder="Masukkan Deskripsi Transaksi"
-      value={deskripsi}
-      onChange={(e) => setDeskripsi(e.target.value)}
-      multiline={true}
-      rows={8}
-      fullWidth={true}
-    />
-  );
-};
 
-export default DeskripsiTransaksi;
+export default TextField;

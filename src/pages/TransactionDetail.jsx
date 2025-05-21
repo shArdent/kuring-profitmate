@@ -1,24 +1,64 @@
-import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
-import Sidebar from '../components/ui/Sidebar';
-import DatePicker from '../components/ui/DatePicker';
-import Button from '../components/ui/Button';
-import TextField from '../components/ui/TextField';
+import React, { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
+import Sidebar from "../components/ui/Sidebar";
+import DatePicker from "../components/ui/DatePicker";
+import Button from "../components/ui/Button";
+import TextField from "../components/ui/TextField";
+import apiClient from "../utils/axios";
+import toast from "react-hot-toast";
 
 const TransactionDetail = () => {
   const { id } = useParams();
 
-  const [date, setDate] = useState('');
-  const [transactionId, setTransactionId] = useState('');
-  const [description, setDescription] = useState('');
+  const [date, setDate] = useState("");
+  const [transactionId, setTransactionId] = useState("");
+  const [currentDescription, setCurrentDescription] = useState("");
+  const [trxData, setTrxData] = useState(null);
+
+  const getTrxDetail = async () => {
+    try {
+      const {
+        data: { data },
+      } = await apiClient(`/transaction/${id}`);
+
+      setTrxData(data);
+      setDate(data.createdAt);
+      setCurrentDescription(data.description ?? "");
+
+      console.log(data);
+    } catch (error) {
+      console.log(error);
+      toast.error("Gagal mendapatkan data");
+    }
+  };
 
   useEffect(() => {
     setTransactionId(id);
+    if (id) {
+      getTrxDetail();
+    }
   }, [id]);
 
-  const handleSubmit = (e) => {
+  // useEffect(() => {
+  //   console.log(currentDescription)
+  // }, [currentDescription])
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log({ date, transactionId, description });
+    const payload = {
+      ...trxData,
+      description: currentDescription,
+    };
+
+    console.log(payload);
+    try {
+      await apiClient.patch(`/transaction/${id}`, payload);
+      toast.success("Berhasil mengubah data");
+      getTrxDetail();
+    } catch (error) {
+      console.log(error);
+      toast.error("Gagal mengubah data");
+    }
   };
 
   return (
@@ -64,15 +104,24 @@ const TransactionDetail = () => {
           <TextField
             label="Deskripsi Transaksi"
             placeholder="Masukkan Deskripsi Transaksi"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
+            deskripsi={currentDescription}
+            value={currentDescription}
+            onChange={(e) => setCurrentDescription(e.target.value)}
             multiline
             rows={5}
           />
 
           <div className="pt-4 flex gap-4">
-            <Button type="submit" variant="primary">Simpan</Button>
-            <Button type="button" variant="outline" onClick={() => window.history.back()}>Batal</Button>
+            <Button type="submit" variant="primary">
+              Simpan
+            </Button>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => window.history.back()}
+            >
+              Batal
+            </Button>
           </div>
         </form>
       </div>
