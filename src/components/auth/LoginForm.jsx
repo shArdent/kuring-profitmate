@@ -24,7 +24,11 @@ const LoginForm = () => {
     // Implementasi login akan ditambahkan di sini
     console.log("Login form submitted:", formData);
 
-    await login(formData);
+    try {
+      await login(formData);
+    } catch (err) {
+      console.log(err);
+    }
 
     navigate("/dashboard");
   };
@@ -83,7 +87,6 @@ const LoginForm = () => {
             Ingat saya
           </label>
         </div>
-
       </div>
 
       {/* Tombol submit ditaruh di tengah */}
