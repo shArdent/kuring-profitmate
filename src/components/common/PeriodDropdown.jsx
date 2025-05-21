@@ -10,35 +10,9 @@ import { useNavigate } from "react-router-dom";
 const PeriodDropdown = ({ currentPeriod, setCurrentPeriod, onAddPeriod }) => {
   // Example period data
   const navigate = useNavigate();
-  const periodData = [
-    {
-      id: 1,
-      name: "Periode 1",
-      startDate: new Date(2024, 0, 1),
-      endDate: new Date(2024, 2, 31),
-    },
-    {
-      id: 2,
-      name: "Periode 2",
-      startDate: new Date(2024, 3, 1),
-      endDate: new Date(2024, 5, 30),
-    },
-    {
-      id: 3,
-      name: "Periode 3",
-      startDate: new Date(2024, 6, 1),
-      endDate: new Date(2024, 8, 30),
-    },
-    {
-      id: 4,
-      name: "Periode 4",
-      startDate: new Date(2024, 9, 1),
-      endDate: new Date(2024, 11, 31),
-    },
-  ];
 
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [periods, setPeriods] = useState(periodData);
+  const [periods, setPeriods] = useState(null);
   const [isAddOpen, setIsAddOpen] = useState(false);
 
   const handleAddClose = () => {
@@ -51,7 +25,7 @@ const PeriodDropdown = ({ currentPeriod, setCurrentPeriod, onAddPeriod }) => {
         data: { data },
       } = await apiClient.post("/period", values);
 
-      navigate(-1)
+      navigate(0);
 
       toast.success("Berhasil menambahkan periode");
     } catch (error) {
@@ -134,19 +108,21 @@ const PeriodDropdown = ({ currentPeriod, setCurrentPeriod, onAddPeriod }) => {
         {isDropdownOpen && (
           <div className="absolute top-full left-0 right-0 bg-white text-gray-800 rounded-b-lg shadow-lg z-10 mt-1">
             <ul className="divide-y divide-gray-100">
-              {periods.map((period) => (
-                <li
-                  key={period.id}
-                  className="px-4 py-3 hover:bg-gray-100 cursor-pointer"
-                  onClick={() => handlePeriodChange(period)}
-                >
-                  <div className="font-medium">{period.name}</div>
-                  <div className="text-sm text-gray-600">
-                    {format(period.startDate, "MMM yyyy", { locale: id })} -{" "}
-                    {format(period.endDate, "MMM yyyy", { locale: id })}
-                  </div>
-                </li>
-              ))}
+              {periods
+                ? periods.map((period) => (
+                    <li
+                      key={period.id}
+                      className="px-4 py-3 hover:bg-gray-100 cursor-pointer"
+                      onClick={() => handlePeriodChange(period)}
+                    >
+                      <div className="font-medium">{period.name}</div>
+                      <div className="text-sm text-gray-600">
+                        {format(period.startDate, "MMM yyyy", { locale: id })} -{" "}
+                        {format(period.endDate, "MMM yyyy", { locale: id })}
+                      </div>
+                    </li>
+                  ))
+                : null}
             </ul>
 
             {/* Tambah periode Baru button */}

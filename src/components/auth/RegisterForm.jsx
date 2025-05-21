@@ -31,7 +31,7 @@ const RegisterForm = () => {
         password: formData.confirmPassword,
         businessName: formData.businessName,
       });
-      navigate("/dashboard");
+      navigate("/login");
     } catch (error) {
       console.log(error);
     }

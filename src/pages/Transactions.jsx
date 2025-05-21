@@ -90,6 +90,10 @@ const Transactions = () => {
     setShowConfirmModal(true);
   };
 
+  useEffect(() => {
+    console.log(showConfirmModal);
+  }, [showConfirmModal]);
+
   // Actual add transaction after confirmation
   const handleAddTransaction = async () => {
     // In a real app, this would be an API call to add the transaction
@@ -250,6 +254,11 @@ const Transactions = () => {
       <Sidebar />
 
       <div className="flex-1 p-6">
+        <ConfirmationModal
+          onConfirm={handleConfirmAction}
+          onCancel={handleCancelConfirmation}
+          message={getConfirmationMessage()}
+        />
         <div className="flex justify-between items-center mb-6">
           <h1 className="text-2xl font-bold">Daftar Transaksi</h1>
           <button
@@ -313,14 +322,6 @@ const Transactions = () => {
           }}
           onSubmit={handleSubmitEditTransaction}
           editData={currentTransaction}
-        />
-      )}
-
-      {showConfirmModal && (
-        <ConfirmationModal
-          onConfirm={handleConfirmAction}
-          onCancel={handleCancelConfirmation}
-          message={getConfirmationMessage()}
         />
       )}
 
