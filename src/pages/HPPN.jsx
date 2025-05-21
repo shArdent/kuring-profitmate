@@ -19,6 +19,7 @@ const HPPN = () => {
       setSellingData(data);
       console.log(data);
     } catch (error) {
+      console.log(error)
       setSellingData(null);
       toast.error("Data HPPn belum ditambahkan");
     }
@@ -28,6 +29,8 @@ const HPPN = () => {
     if (currentPeriod) {
       handleGetSellingData();
     }
+
+    console.log(currentPeriod)
   }, [currentPeriod]);
 
   return (

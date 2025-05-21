@@ -102,6 +102,7 @@ const Transactions = () => {
       const data = await postTransaction(pendingTransactionData);
       console.log(data);
     } catch (error) {
+      console.log(error);
       showNotification("gagal");
       return;
     }
@@ -318,13 +319,12 @@ const Transactions = () => {
         />
       )}
 
-      {showConfirmModal && (
-        <ConfirmationModal
-          onConfirm={handleConfirmAction}
-          onCancel={handleCancelConfirmation}
-          message={getConfirmationMessage()}
-        />
-      )}
+      <ConfirmationModal
+        isOpen={showConfirmModal}
+        onConfirm={handleConfirmAction}
+        onCancel={handleCancelConfirmation}
+        message={getConfirmationMessage()}
+      />
 
       {showSuccessNotification && (
         <NotificationModal

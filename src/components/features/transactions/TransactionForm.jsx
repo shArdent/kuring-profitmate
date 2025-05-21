@@ -97,6 +97,8 @@ const TransactionForm = ({
         id: editData?.id,
       };
 
+      console.log("dari submit")
+
       if (isEditMode) {
         onSubmit(submissionData);
         return;

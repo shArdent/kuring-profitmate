@@ -5,7 +5,7 @@ const ConfirmationModal = ({
   isOpen, 
   onClose, 
   onConfirm, 
-  title, 
+  title,  
   message, 
   confirmText = 'Konfirmasi', 
   cancelText = 'Batal' 
