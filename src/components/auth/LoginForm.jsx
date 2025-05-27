@@ -29,6 +29,7 @@ const LoginForm = () => {
             await login(formData);
             navigate("/dashboard");
         } catch (err) {
+            console.log(err)
 
             if (err.status == 400) {
                 toast.error("Email atau password anda salah");
