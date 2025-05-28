@@ -190,9 +190,7 @@ const Transactions = () => {
       header: "Tanggal",
       width: "20%",
       render: (row) => {
-        // Format date: YYYY-MM-DD to DD/MM/YYYY
-
-        return format(row.createdAt, "ddd MMM yyy", {
+        return format(row.createdAt, "d MMM yyy", {
           locale: id,
         });
       },
